@@ -165,7 +165,8 @@ X_train_encoded.pkl (if required by your code)
 
 6) Run the app
 
-python app.py
+python wsgi.py
+
 The app starts at http://127.0.0.1:5000/ (or the host/port configured in your code).
 
 API Reference
