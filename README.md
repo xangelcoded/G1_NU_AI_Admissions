@@ -99,19 +99,25 @@ cd G1_NU_AI_Admissions
 
 # Windows (PowerShell)
 python -m venv .venv
+
 .venv\Scripts\Activate.ps1
 
 # macOS / Linux
 python -m venv .venv
+
 source .venv/bin/activate
+
 3) Install dependencies
 
 pip install -r requirements.txt
 
 
 4) Configure environment
+
 Create your local config file:
+
 cp .env.example .env
+
 Open .env and set values:
 
 # Flask / DB
