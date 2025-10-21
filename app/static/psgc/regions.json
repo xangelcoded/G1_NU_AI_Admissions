@@ -1,0 +1,28 @@
+{
+  "items": [
+
+    { "code": "040000000", "name": "Region IV-A – CALABARZON", "token": "calabarzon", "aliases": ["region iv-a", "region 4a", "region iva", "r4a"] },
+
+    { "code": "130000000", "name": "NCR – National Capital Region", "token": "national capital region", "aliases": ["ncr", "metro manila", "region ncr"] },
+    { "code": "140000000", "name": "CAR – Cordillera Administrative Region", "token": "cordillera administrative region", "aliases": ["car", "cordillera", "region car"] },
+
+    { "code": "010000000", "name": "Region I – Ilocos Region", "token": "ilocos region", "aliases": ["region i", "region 1", "r1"] },
+    { "code": "020000000", "name": "Region II – Cagayan Valley", "token": "cagayan valley", "aliases": ["region ii", "region 2", "r2"] },
+    { "code": "030000000", "name": "Region III – Central Luzon", "token": "central luzon", "aliases": ["region iii", "region 3", "r3"] },
+    { "code": "170000000", "name": "Region IV-B – MIMAROPA Region", "token": "mimaropa region", "aliases": ["region iv-b", "region 4b", "region ivb", "r4b", "mimaropa", "southwestern tagalog region"] },
+    { "code": "050000000", "name": "Region V – Bicol Region", "token": "bicol region", "aliases": ["region v", "region 5", "r5"] },
+
+    { "code": "060000000", "name": "Region VI – Western Visayas", "token": "western visayas", "aliases": ["region vi", "region 6", "r6"] },
+    { "code": "070000000", "name": "Region VII – Central Visayas", "token": "central visayas", "aliases": ["region vii", "region 7", "r7"] },
+    { "code": "080000000", "name": "Region VIII – Eastern Visayas", "token": "eastern visayas", "aliases": ["region viii", "region 8", "r8"] },
+
+    { "code": "090000000", "name": "Region IX – Zamboanga Peninsula", "token": "zamboanga peninsula", "aliases": ["region ix", "region 9", "r9"] },
+    { "code": "100000000", "name": "Region X – Northern Mindanao", "token": "northern mindanao", "aliases": ["region x", "region 10", "r10"] },
+    { "code": "110000000", "name": "Region XI – Davao Region", "token": "davao region", "aliases": ["region xi", "region 11", "r11"] },
+    { "code": "120000000", "name": "Region XII – SOCCSKSARGEN", "token": "soccsksargen", "aliases": ["region xii", "region 12", "r12"] },
+    { "code": "160000000", "name": "Region XIII – Caraga", "token": "caraga", "aliases": ["region xiii", "region 13", "r13", "caraga region"] },
+
+    { "code": "180000000", "name": "NIR – Negros Island Region", "token": "negros island region", "aliases": ["nir", "negros island", "region xviii", "region 18", "r18"] },
+    { "code": "190000000", "name": "BARMM – Bangsamoro Autonomous Region in Muslim Mindanao", "token": "bangsamoro autonomous region in muslim mindanao", "aliases": ["barmm", "bangsamoro", "armm", "region barmm"] }
+  ]
+}

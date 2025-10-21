@@ -1,0 +1,19 @@
+/*
+ * https://use.typekit.net/pde5tbf.css
+ *
+ * © 2009-2023 Adobe Systems Incorporated. All Rights Reserved.
+ */
+
+@import url("https://p.typekit.net/p.css?s=1&k=pde5tbf&ht=tk&f=45407&a=864473&app=typekit&e=css");
+
+@font-face {
+font-family:"ivypresto-headline";
+src:url("https://use.typekit.net/af/e456f5/00000000000000007735e5a2/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3") format("woff2"),url("https://use.typekit.net/af/e456f5/00000000000000007735e5a2/30/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3") format("woff"),url("https://use.typekit.net/af/e456f5/00000000000000007735e5a2/30/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3") format("opentype");
+font-display:auto;font-style:normal;font-weight:600;font-stretch:normal;font-display: swap;
+}
+
+@font-face {
+font-family:"ivypresto-headline";
+src:url("https://use.typekit.net/af/e456f5/00000000000000007735e5a2/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3") format("woff2"),url("https://use.typekit.net/af/e456f5/00000000000000007735e5a2/30/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3") format("woff"),url("https://use.typekit.net/af/e456f5/00000000000000007735e5a2/30/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3") format("opentype");
+font-display:auto;font-style:normal;font-weight:500;font-stretch:normal;font-display: swap;
+}

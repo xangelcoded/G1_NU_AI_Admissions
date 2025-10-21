@@ -1,0 +1,1380 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>NU Lipa • Admin Command Center — Cyber Admin</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#0a122e" id="metaTheme"/>
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Poppins:wght@600;700;800;900&display=swap" rel="stylesheet" />
+
+<style>
+/* ==========================================================
+   NU • CYBER ADMIN (Futuristic Blue/Gold)
+   — Clean • Accessible • Fast • Backend-Compatible
+   (All endpoints & DOM IDs preserved)
+   ========================================================== */
+
+/* ---------------- Design tokens ---------------- */
+:root{
+  /* Radii & motion */
+  --radius-xl:28px; --radius-lg:22px; --radius:16px; --radius-sm:12px;
+  --ease-1:cubic-bezier(.2,.8,.2,1);
+
+  /* Shadows */
+  --shadow-1:0 12px 28px hsl(231 64% 18%/.28), 0 4px 10px hsl(231 64% 10%/.35);
+  --shadow-2:0 18px 42px hsl(231 64% 18%/.35), 0 6px 18px hsl(231 64% 10%/.22);
+
+  /* NU colors */
+  --nu-blue:#0b3b8c;           /* brand base */
+  --nu-neon:#5CC8FF;           /* electric cyan accent */
+  --nu-neon-2:#34a3ff;         /* deep neon */
+  --nu-gold:#FFD86B;           /* primary accent */
+  --nu-gold-2:#F5C94E;
+
+  /* Color roles (dark default) */
+  --ink:hsl(231 22% 92%);      /* main text */
+  --muted:hsl(231 14% 72%);
+  --bg:hsl(231 66% 6%);
+  --panel:hsl(231 60% 12%/.88);
+  --surface:hsl(231 60% 10%/.78);
+  --glass:linear-gradient(180deg,hsl(231 60% 14%/.74),hsl(231 60% 10%/.72));
+  --ring:hsl(47 98% 60%/.45);
+  --border:1px solid hsl(0 0% 100%/.12);
+
+  /* Chart palette */
+  --c1:#22c55e; --c2:#34a3ff; --c3:#f5a524; --c4:#ff6b6b; --c5:#94a3b8;
+  --c6:#0b5bd5; --c7:#d4af37; --c8:#4f46e5; --c9:#06b6d4; --c10:#f97316;
+
+  /* Background image path (replace with your asset if desired) */
+  --bg-image-url: url('/static/img/nu-cyber-grid.jpg');
+}
+
+/* Optional light theme variables */
+[data-theme="light"]{
+  --ink:hsl(233 28% 14%); --muted:hsl(233 12% 40%);
+  --bg:hsl(225 35% 96%); --surface:hsl(0 0% 100%/.95); --panel:hsl(0 0% 100%/.92);
+  --glass:linear-gradient(180deg,hsl(0 0% 100%/.88),hsl(0 0% 100%/.78));
+  --ring:hsl(46 94% 50%/.30);
+  --border:1px solid hsl(232 10% 10%/.10);
+  color-scheme:light;
+}
+:root,[data-theme="dark"]{ color-scheme:dark }
+
+/* ---------------- Base & background ---------------- */
+*{box-sizing:border-box}
+html,body{height:100%}
+html:focus-within{scroll-behavior:smooth}
+body{
+  margin:0; color:var(--ink);
+  font:15px/1.55 Inter, system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans", Arial, sans-serif;
+  -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+
+  /* Futuristic layered background (no external libs) */
+  background:
+    radial-gradient(120vmax 80vmax at 12% -10%, rgba(52,163,255,.20), transparent 60%),
+    radial-gradient(120vmax 70vmax at 90% 0%, rgba(255,216,107,.18), transparent 50%),
+    linear-gradient(180deg, hsl(231 65% 7%), hsl(231 60% 6%));
+}
+
+/* Neon grid & soft noise overlays */
+body::before,
+body::after{
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:-1;
+}
+body::before{
+  /* subtle cyber grid */
+  background:
+    repeating-linear-gradient(0deg, rgba(120,160,255,.08) 0 1px, transparent 1px 80px),
+    repeating-linear-gradient(90deg, rgba(120,160,255,.08) 0 1px, transparent 1px 80px);
+  mask:radial-gradient(120vmax 80vmax at 50% 50%, rgba(255,255,255,.8) 0%, rgba(255,255,255,.25) 60%, transparent 82%);
+}
+body::after{
+  /* faint vignette and glow */
+  background:
+    radial-gradient(60vmax 40vmax at 82% 10%, rgba(92,200,255,.12), transparent 60%),
+    radial-gradient(90vmax 60vmax at 12% 96%, rgba(255,216,107,.10), transparent 70%);
+}
+
+/* Background image layer (easily switch image via --bg-image-url) */
+.bg-img{
+  position:fixed; inset:0; z-index:-2;
+  background-image: var(--bg-image-url);
+  background-size:cover; background-position:center;
+  opacity:.12; mix-blend-mode:screen;
+  filter:saturate(140%) contrast(110%) brightness(80%);
+}
+[data-theme="light"] .bg-img{
+  mix-blend-mode:multiply; opacity:.14;
+  filter:saturate(120%) contrast(105%) brightness(100%);
+}
+
+/* High-contrast mode (toggleable) */
+[data-contrast="high"]{
+  --panel:hsl(231 60% 10%/1);
+  --surface:hsl(231 60% 8%/1);
+  --muted:hsl(231 8% 84%);
+  --ring:hsl(47 100% 50%/.55);
+}
+[data-contrast="high"] .card::before{
+  background:linear-gradient(90deg, rgba(92,200,255,.55), rgba(255,216,107,.55));
+}
+
+/* Respect OS forced-colors */
+@media (forced-colors: active){
+  .bg-img{ display:none !important; } /* avoid low contrast image under forced colors */
+}
+
+/* Skip link for keyboard users */
+.skip-link{
+  position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden;
+}
+.skip-link:focus{
+  position:fixed; left:14px; top:10px; width:auto; height:auto; padding:10px 12px; z-index:200;
+  background:var(--panel); border:var(--border); border-radius:10px; font-weight:800;
+}
+
+/* ---------------- Top Navigation ---------------- */
+header.nav{
+  position:sticky; top:0; z-index:100; padding:10px 14px;
+  background:var(--glass); border-bottom:var(--border);
+  backdrop-filter:saturate(140%) blur(10px);
+  display:flex; align-items:center; gap:10px;
+}
+.crest{
+  width:36px;height:36px;border-radius:12px; box-shadow:0 1px 2px hsl(0 0% 0%/.45) inset;
+  background:
+    radial-gradient(55% 70% at 30% 30%, rgba(255,255,255,.75), transparent 60%),
+    conic-gradient(from 210deg, #0b3b8c, #1a4fa1 60%, #0b3b8c);
+}
+.brand{font:800 15px/1 Poppins,Inter,sans-serif; letter-spacing:.25px}
+.nav .right{margin-left:auto; display:flex; gap:8px; align-items:center}
+.net-dot{width:10px;height:10px;border-radius:50%; background:#22c55e; box-shadow:0 0 0 3px hsl(140 70% 40%/.2)}
+
+/* Buttons */
+.btn{
+  display:inline-flex; align-items:center; gap:8px; cursor:pointer;
+  padding:10px 12px; border-radius:12px; font-weight:800; color:var(--ink);
+  background:var(--panel); border:var(--border); box-shadow:var(--shadow-1);
+  transition:transform .15s var(--ease-1), box-shadow .15s var(--ease-1);
+}
+.btn.icon{padding:8px 10px}
+.btn:hover{transform:translateY(-1px)}
+.btn:focus-visible{outline:0; box-shadow:0 0 0 4px var(--ring), var(--shadow-1)}
+.btn.primary{
+  border:0;
+  background: linear-gradient(180deg, var(--nu-gold), var(--nu-gold-2));
+  color:hsl(231 60% 8%); font-weight:900;
+  box-shadow: 0 6px 22px rgba(255,216,107,.25),
+              0 2px 8px rgba(255,216,107,.15),
+              0 0 0 1px rgba(255,216,107,.28) inset;
+}
+
+/* ---------------- Sticky toolbar ---------------- */
+.toolbar{
+  position:sticky; top:54px; z-index:90; border-bottom:var(--border);
+  background:var(--surface); backdrop-filter:blur(6px)
+}
+.toolbar .row{
+  max-width:1280px; margin:0 auto; padding:10px 14px;
+  display:flex; gap:8px; align-items:center; flex-wrap:wrap;
+}
+.chip{
+  padding:6px 10px; border-radius:999px; background:var(--panel);
+  border:var(--border); color:var(--muted); font-weight:800; font-size:12.5px;
+  box-shadow:0 0 0 1px rgba(92,200,255,.14) inset;
+}
+.pill{
+  padding:6px 10px; border-radius:999px;
+  background:rgba(255,216,107,.12); color:var(--nu-gold);
+  border:1px solid rgba(255,216,107,.35); font-weight:900
+}
+
+/* ---------------- Shell ---------------- */
+.container{max-width:1280px; margin:18px auto; padding:0 14px}
+.page-head{display:flex; align-items:center; gap:12px; flex-wrap:wrap}
+.page-title{margin:8px 0; font:800 28px/1.1 Poppins,Inter,sans-serif; letter-spacing:.2px}
+
+/* ---------------- Grid (fixed) ---------------- */
+.grid-2,.grid-3,.grid-4{display:grid; gap:12px}
+.grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.grid-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media (max-width:1100px){ .grid-4,.grid-3,.grid-2{grid-template-columns:1fr} }
+
+/* ---------------- Cards (neon border) ---------------- */
+.card{
+  position:relative; overflow:hidden;
+  background:var(--panel); border-radius:var(--radius-lg);
+  border:var(--border); box-shadow:var(--shadow-1);
+  content-visibility:auto; contain-intrinsic-size: 440px 320px; /* perf */
+}
+.card h3{display:flex; align-items:center; gap:8px; margin:0 0 6px; font:800 16px/1.2 Poppins,Inter,sans-serif}
+.muted{color:var(--muted)}
+.card::before{
+  content:""; position:absolute; inset:-1px; border-radius:inherit; padding:1px;
+  background:linear-gradient(90deg, rgba(92,200,255,.35), rgba(255,216,107,.35));
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor; mask-composite:exclude; pointer-events:none;
+}
+.card:hover{box-shadow:0 22px 42px rgba(11,59,140,.24), 0 8px 20px rgba(0,0,0,.25)}
+
+/* ---------------- Filters ---------------- */
+.form-grid{display:grid; grid-template-columns:repeat(8,minmax(0,1fr)); gap:12px}
+label{font-weight:800; font-size:12px; color:var(--muted); display:flex; flex-direction:column; gap:6px}
+input,select{
+  padding:10px 12px; border-radius:12px; border:1px solid hsl(0 0% 50%/.18);
+  background:transparent; color:var(--ink); font-weight:700
+}
+input[type="range"]{padding:0; accent-color: var(--nu-gold)}
+input[type="range"]::-webkit-slider-thumb{
+  appearance:none; width:18px; height:18px; border-radius:50%;
+  background: radial-gradient(circle at 30% 30%, #fff 0 30%, var(--nu-gold) 31% 100%);
+  border:1px solid rgba(0,0,0,.35);
+  box-shadow: 0 0 0 3px rgba(255,216,107,.25);
+}
+input[type="range"]::-webkit-slider-runnable-track{
+  height:6px; border-radius:999px;
+  background:linear-gradient(90deg, var(--nu-neon), var(--nu-gold));
+}
+input[type="range"]::-moz-range-thumb{
+  width:18px; height:18px; border-radius:50%; background:var(--nu-gold); border:0;
+}
+input[type="range"]::-moz-range-track{
+  height:6px; border-radius:999px;
+  background:linear-gradient(90deg, var(--nu-neon), var(--nu-gold));
+}
+
+/* ---------------- KPIs ---------------- */
+.kpi .kpi-num{font:900 clamp(22px,3vw,32px)/1 Poppins,Inter,sans-serif; color:var(--nu-gold)}
+.kpi .spark{height:28px; width:100%; display:block}
+.delta{font-size:12px; font-weight:900; padding:4px 8px; border-radius:999px; margin-left:6px}
+.delta.up{background:rgba(34,197,94,.18); color:#22c55e}
+.delta.down{background:rgba(255,107,107,.18); color:#ff7d7d}
+
+/* ---------------- Queues ---------------- */
+.queue-list{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px}
+.queue-row{
+  display:grid; gap:8px; align-items:center;
+  grid-template-columns:110px 90px 90px 90px 1.3fr .9fr 1fr;
+  padding:10px 12px; border-radius:12px; background:var(--surface); border:var(--border)
+}
+.badge{display:inline-block; padding:4px 8px; border-radius:999px; font-weight:900; font-size:12px; color:#0c1022}
+.badge-vh{background:linear-gradient(90deg,#FFD86B,#5CC8FF)}
+.badge-h{ background:linear-gradient(90deg,#F9E06C,#6EA8FF)}
+.badge-m{ background:linear-gradient(90deg,#7DB9FF,#4C7DFF)}
+.badge-l{ background:linear-gradient(90deg,#FF8A5A,#FF4D4D); color:#fff}
+.badge-vl{background:linear-gradient(90deg,#505050,#1f1f1f); color:#fff}
+
+/* ---------------- Charts ---------------- */
+.chart{
+  display:block; width:100%; height:320px; border-radius:14px;
+  background:var(--surface); border:var(--border); position:relative; overflow:hidden
+}
+.chart-tools{position:absolute; top:8px; right:8px; display:flex; gap:6px}
+.chart-tools .btn{padding:6px 8px; font-size:12px}
+canvas[data-chart]{display:block; width:100%; height:100%}
+.skeleton{position:relative; overflow:hidden; background:linear-gradient(90deg,#111b36 25%,#0f172a 50%,#111b36 75%); background-size:200% 100%; animation:shim 1s linear infinite}
+@keyframes shim{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* ---------------- Table ---------------- */
+.table-wrap{overflow:auto}
+table{width:100%; border-collapse:collapse; background:var(--surface); border-radius:12px}
+th,td{white-space:nowrap; padding:10px 12px; border-bottom:1px dashed hsl(231 30% 70%/.20); text-align:left; font-size:14px}
+thead th{position:sticky; top:0; z-index:1; background:transparent; font-weight:900}
+tbody td:first-child, thead th:first-child{
+  position:sticky; left:0; z-index:2; background:var(--surface);
+}
+tbody tr:hover{ background:linear-gradient(90deg,rgba(255,216,107,.06),transparent) }
+tr.row-vh{background:linear-gradient(90deg,rgba(34,197,94,.09),transparent)}
+tr.row-h {background:linear-gradient(90deg,rgba(46,168,255,.09),transparent)}
+tr.row-m {background:linear-gradient(90deg,rgba(125,185,255,.06),transparent)}
+tr.row-l {background:linear-gradient(90deg,rgba(255,107,107,.10),transparent)}
+tr.row-vl{background:linear-gradient(90deg,rgba(107,114,128,.10),transparent)}
+.dense th,.dense td{padding:7px 10px}
+.pager{display:flex; gap:.5rem; justify-content:flex-end}
+.table-controls{display:flex; gap:.5rem; align-items:center; flex-wrap:wrap}
+
+/* ---------------- Drawer ---------------- */
+.drawer{
+  position:fixed; top:0; right:-460px; width:460px; height:100dvh;
+  background:var(--panel); border-left:var(--border); box-shadow:var(--shadow-2);
+  transition:right .25s var(--ease-1); z-index:120; display:flex; flex-direction:column
+}
+.drawer.open{right:0}
+.drawer header{padding:12px 14px; border-bottom:var(--border); display:flex; align-items:center; justify-content:space-between}
+.drawer .content{padding:14px; overflow:auto; display:flex; flex-direction:column; gap:10px}
+
+/* ---------------- Help modal ---------------- */
+.help{position:fixed; inset:0; display:none; align-items:center; justify-content:center; background:rgba(0,0,0,.4); z-index:160}
+.help.open{display:flex}
+.help .box{background:var(--panel); border:var(--border); padding:16px; border-radius:16px; width:min(92vw,720px); box-shadow:var(--shadow-2)}
+
+/* ---------------- Toasts & a11y ---------------- */
+.toasts{position:fixed; right:14px; bottom:14px; display:flex; flex-direction:column; gap:8px; z-index:150}
+.toast{background:var(--panel); border:var(--border); border-left:4px solid var(--nu-gold-2); padding:10px 12px; border-radius:12px; box-shadow:var(--shadow-2)}
+.sr-only{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
+
+/* ---------------- Command Palette ---------------- */
+.cmdk{ position:fixed; inset:0; display:none; align-items:flex-start; justify-content:center;
+       padding-top:10vh; background:rgba(0,0,0,.45); z-index:180; }
+.cmdk.open{ display:flex }
+.cmdk .box{ width:min(92vw,720px); border-radius:16px; background:var(--panel);
+            border:var(--border); box-shadow:var(--shadow-2); overflow:hidden }
+.cmdk .head{ display:flex; align-items:center; gap:8px; padding:10px 12px; border-bottom:var(--border) }
+.cmdk input{ all:unset; flex:1; padding:10px 12px; border-radius:10px; background:var(--surface); font-weight:700 }
+.cmdk ul{ margin:0; padding:6px; max-height:48vh; overflow:auto; list-style:none }
+.cmdk li{ padding:10px 12px; border-radius:12px; cursor:pointer; display:flex; align-items:center; justify-content:space-between }
+.cmdk li:hover,.cmdk li.active{ background:linear-gradient(90deg, rgba(92,200,255,.12), rgba(255,216,107,.12)); }
+.cmdk kbd{ font:700 11px/1 Inter,system-ui; padding:4px 6px; border-radius:6px; border:1px solid hsl(0 0% 100%/.14) }
+
+/* ---------------- Motion/Accessibility ---------------- */
+@media (prefers-reduced-motion: reduce){
+  * { animation-duration:.001ms !important; animation-iteration-count:1 !important; transition:none !important; }
+}
+
+/* ---------------- Print ---------------- */
+@media print{
+  header.nav, .toolbar, .toasts, .help, .cmdk, .bg-img { display:none !important }
+  .container{max-width:none}
+}
+</style>
+</head>
+
+<body>
+<!-- Accessibility & background -->
+<a href="#main" class="skip-link">Skip to content</a>
+<div class="bg-img" aria-hidden="true"></div>
+
+<!-- ===== NAV ===== -->
+<header class="nav" role="navigation" aria-label="Primary">
+  <div class="crest" aria-hidden="true"></div>
+  <div class="brand">National University – Lipa • Admin Command Center</div>
+  <div class="right">
+    <div id="netDot" class="net-dot" title="Network OK" aria-label="Network status"></div>
+    <button id="themeBtn" class="btn icon" title="Toggle theme" aria-label="Toggle theme">🌓</button>
+    <button id="contrastBtn" class="btn icon" title="High contrast" aria-label="High contrast">◑</button>
+    <button id="helpBtn" class="btn icon" title="Keyboard shortcuts" aria-label="Keyboard shortcuts">?</button>
+    <a class="btn icon" href="/health" title="System health" target="_blank" aria-label="System health">🩺</a>
+    <a class="btn icon" href="/logout" title="Logout" aria-label="Logout">⎋</a>
+  </div>
+</header>
+
+<!-- ===== STICKY TOOLBAR ===== -->
+<div class="toolbar" role="region" aria-label="Summary chips">
+  <div class="row">
+    <span class="chip" id="chipTotal">—</span>
+    <span class="chip" id="chipAvg">—</span>
+    <span class="chip" id="chipVH">VH: —</span>
+    <span class="chip" id="chipH">H: —</span>
+    <span class="chip" id="chipM">M: —</span>
+    <span class="chip" id="chipL">L: —</span>
+    <span class="chip" id="chipVL">VL: —</span>
+
+    <div style="margin-left:auto; display:flex; gap:6px; align-items:center; flex-wrap:wrap">
+      <select id="presets" title="Saved views"><option value="">View: Default</option></select>
+      <button id="savePreset" class="btn">Save View</button>
+      <button id="deletePreset" class="btn">Delete View</button>
+      <button id="shareView" class="btn" title="Copy shareable link">Share View</button>
+      <span id="lastUpdated" class="pill">Loading…</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PAGE ===== -->
+<main id="main" class="container" aria-live="polite">
+  <div class="page-head">
+    <h2 class="page-title">AI‑Powered Enrollment Monitor</h2>
+  </div>
+
+  <!-- Filters -->
+  <section class="card" style="margin-bottom:12px" aria-label="Filters">
+    <div class="form-grid">
+      <label>Program
+        <select id="filterProgram"><option value="">All Programs</option></select>
+      </label>
+      <label>Region
+        <select id="filterRegion"><option value="">All Regions</option></select>
+      </label>
+      <label>Bucket
+        <select id="filterBucket">
+          <option value="">All</option>
+          <option value="VH">Very High</option>
+          <option value="H">High</option>
+          <option value="M">Medium</option>
+          <option value="L">Low</option>
+          <option value="VL">Very Low</option>
+        </select>
+      </label>
+      <label>Min Confidence
+        <input id="filterMinConf" type="range" min="0" max="1" step=".05" value="0" aria-label="Minimum confidence">
+        <small><span id="filterMinConfVal">0.00</span></small>
+      </label>
+      <label>Lookback (days)
+        <input id="filterDays" type="number" min="1" max="365" value="30">
+      </label>
+      <label>Search (program / region)
+        <input id="filterSearch" type="text" placeholder="Type to filter table only…" aria-label="Search table (client-side)">
+      </label>
+      <div class="actions" style="align-self:end; display:flex; gap:.5rem; flex-wrap:wrap; justify-content:flex-end">
+        <button id="applyFilters" class="btn primary">Apply</button>
+        <button id="resetFilters" class="btn" type="button">Reset</button>
+        <label class="btn" title="Auto-refresh every 60s" style="gap:6px; align-items:center">
+          <input type="checkbox" id="autoRefresh"> Auto Refresh
+        </label>
+        <a class="btn" id="exportCsv" href="/api/admin/export.csv?days=30">Export CSV (server)</a>
+        <button id="exportClientCsv" class="btn" type="button">Export Visible CSV</button>
+        <label class="btn" title="Dense table rows"><input type="checkbox" id="denseRows"> Dense</label>
+      </div>
+    </div>
+  </section>
+
+  <!-- KPI row -->
+  <section class="grid-4" aria-label="Key performance indicators">
+    <div class="card kpi" style="box-shadow:var(--shadow-2)">
+      <h3>Totals</h3>
+      <div style="display:flex; align-items:center; gap:8px">
+        <div id="kpiTotal" class="kpi-num">—</div>
+        <span id="kpiTotalDelta" class="delta" style="display:none">0%</span>
+      </div>
+      <small id="kpiTotalHint" class="muted"></small>
+    </div>
+    <div class="card kpi">
+      <h3>Avg Likelihood</h3>
+      <div style="display:flex; align-items:center; gap:8px">
+        <div id="kpiAvgProb" class="kpi-num">—</div>
+        <span id="kpiProbDelta" class="delta" style="display:none">0%</span>
+      </div>
+      <canvas id="sparkProb" class="spark" aria-hidden="true"></canvas>
+    </div>
+    <div class="card kpi">
+      <h3>Avg Confidence</h3>
+      <div style="display:flex; align-items:center; gap:8px">
+        <div id="kpiAvgConf" class="kpi-num">—</div>
+        <span id="kpiConfDelta" class="delta" style="display:none">0%</span>
+      </div>
+      <canvas id="sparkConf" class="spark" aria-hidden="true"></canvas>
+    </div>
+    <div class="card kpi">
+      <h3>VH / H / M / L / VL</h3>
+      <div id="kpiBuckets5" class="kpi-num">—</div>
+      <small class="muted">5‑level segmentation</small>
+    </div>
+  </section>
+
+  <!-- Priority Queues -->
+  <section class="grid-3" aria-label="Priority queues">
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:8px"><h3>Call Now</h3><span class="badge badge-vh">Very High</span></div>
+      <ul id="queueCallNow" class="queue-list"></ul>
+    </div>
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:8px"><h3>Warm</h3><span class="badge badge-h">High</span><span class="badge badge-m">Medium</span></div>
+      <ul id="queueWarm" class="queue-list"></ul>
+    </div>
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:8px"><h3>Nurture</h3><span class="badge badge-l">Low</span><span class="badge badge-vl">Very Low</span></div>
+      <ul id="queueNurture" class="queue-list"></ul>
+    </div>
+  </section>
+
+  <!-- Smart Insights -->
+  <section class="card" aria-label="Smart insights">
+    <div style="display:flex;align-items:center;gap:8px;justify-content:space-between">
+      <div><h3>Smart Insights</h3><span class="muted">Data‑driven suggestions</span></div>
+    </div>
+    <ul id="insightsList" style="margin:0;padding:0 0 0 18px;line-height:1.7">
+      <li class="muted">Loading insights…</li>
+    </ul>
+  </section>
+
+  <!-- Charts -->
+  <section class="grid-2" aria-label="Composition charts">
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:8px;justify-content:space-between">
+        <div>
+          <h3>Bucket Share</h3>
+          <span class="muted" id="sumBuckets">5‑level (share of all applicants)</span>
+        </div>
+        <div class="chart-tools"><button class="btn" data-dl="#chartBuckets5">Download</button></div>
+      </div>
+      <div class="chart"><canvas id="chartBuckets5" data-chart class="skeleton" aria-label="Bucket share (stacked bar)"></canvas></div>
+    </div>
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:8px;justify-content:space-between">
+        <div><h3>Program Popularity</h3><span class="muted" id="sumPrograms">Top programs</span></div>
+        <div class="chart-tools"><button class="btn" data-dl="#chartPrograms">Download</button></div>
+      </div>
+      <div class="chart"><canvas id="chartPrograms" data-chart class="skeleton" aria-label="Program bars"></canvas></div>
+    </div>
+  </section>
+
+  <section class="grid-2" aria-label="Distribution charts">
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:8px;justify-content:space-between">
+        <div><h3>Region Distribution</h3><span class="muted" id="sumRegions">Applicants by region</span></div>
+        <div class="chart-tools"><button class="btn" data-dl="#chartRegions">Download</button></div>
+      </div>
+      <div class="chart"><canvas id="chartRegions" data-chart class="skeleton" aria-label="Region bars"></canvas></div>
+    </div>
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:8px;justify-content:space-between">
+        <div><h3>Student Type Split</h3><span class="muted" id="sumTypes">Full‑time vs Working</span></div>
+        <div class="chart-tools"><button class="btn" data-dl="#chartStudentType">Download</button></div>
+      </div>
+      <div class="chart"><canvas id="chartStudentType" data-chart class="skeleton" aria-label="Type pie"></canvas></div>
+    </div>
+  </section>
+
+  <section class="grid-2" aria-label="Histograms">
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:8px;justify-content:space-between">
+        <div><h3>Likelihood Histogram</h3><span class="muted">L2E%</span></div>
+        <div class="chart-tools"><button class="btn" data-dl="#chartHistProb">Download</button></div>
+      </div>
+      <div class="chart"><canvas id="chartHistProb" data-chart class="skeleton" aria-label="Likelihood histogram"></canvas></div>
+    </div>
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:8px;justify-content:space-between">
+        <div><h3>Confidence Histogram</h3><span class="muted">Confidence%</span></div>
+        <div class="chart-tools"><button class="btn" data-dl="#chartHistConf">Download</button></div>
+      </div>
+      <div class="chart"><canvas id="chartHistConf" data-chart class="skeleton" aria-label="Confidence histogram"></canvas></div>
+    </div>
+  </section>
+
+  <section class="card" aria-label="Trend line">
+    <div style="display:flex;align-items:center;gap:8px;justify-content:space-between">
+      <div><h3>Trend</h3><span class="muted">Avg Likelihood & Confidence</span></div>
+      <div class="chart-tools"><button class="btn" data-dl="#chartTrend">Download</button></div>
+    </div>
+    <div class="chart"><canvas id="chartTrend" data-chart class="skeleton" aria-label="Trend line"></canvas></div>
+  </section>
+
+  <section class="card" aria-label="Heatmap">
+    <div style="display:flex;align-items:center;gap:8px;justify-content:space-between">
+      <div><h3>Likelihood × Confidence Heatmap</h3><span class="muted">Concentration</span></div>
+      <div class="chart-tools"><button class="btn" data-dl="#chartHeat">Download</button></div>
+    </div>
+    <div class="chart"><canvas id="chartHeat" data-chart class="skeleton" aria-label="Heatmap bubbles"></canvas></div>
+  </section>
+
+  <section class="card" aria-label="Priority scatter">
+    <div style="display:flex;align-items:center;gap:8px;justify-content:space-between">
+      <div><h3>Priority Quadrant</h3><span class="muted">Scatter of L2E% vs Confidence%</span></div>
+      <div class="chart-tools"><button class="btn" data-dl="#chartScatter">Download</button></div>
+    </div>
+    <div class="chart"><canvas id="chartScatter" data-chart class="skeleton" aria-label="Priority scatter"></canvas></div>
+  </section>
+
+  <!-- Worklist -->
+  <section class="card" aria-label="Applicants worklist">
+    <div style="display:flex; align-items:center; gap:.5rem; flex-wrap:wrap; margin-bottom:.25rem;">
+      <h3 style="margin-right:auto;">Applicants Worklist</h3>
+      <div class="table-controls">
+        <label>Sort
+          <select id="tblSort">
+            <option value="priority">Priority</option>
+            <option value="prob">Likelihood</option>
+            <option value="conf">Confidence</option>
+            <option value="created_at">Created</option>
+          </select>
+        </label>
+        <label>Dir
+          <select id="tblDir">
+            <option value="desc">Desc</option>
+            <option value="asc">Asc</option>
+          </select>
+        </label>
+        <label>Page Size
+          <select id="tblSize"><option>25</option><option>50</option><option>100</option></select>
+        </label>
+        <button id="tblApply" class="btn">Reload</button>
+        <span id="tblMeta" class="muted" style="margin-left:12px"></span>
+      </div>
+    </div>
+    <div class="table-wrap" id="tableWrap">
+      <table class="table" id="topTable">
+        <thead>
+          <tr>
+            <th title="Bucket from predicted likelihood">Bucket</th>
+            <th title="Priority = Likelihood × Confidence">Priority</th>
+            <th title="Likelihood to enroll">Likelihood</th>
+            <th title="Prediction confidence">Confidence</th>
+            <th>Program</th>
+            <th>Student Type</th>
+            <th>Region</th>
+            <th>Created</th>
+          </tr>
+        </thead>
+        <tbody><!-- rows injected --></tbody>
+      </table>
+    </div>
+    <div class="pager" style="margin-top:.5rem;">
+      <button id="prevPage" class="btn">Prev</button>
+      <span id="pageInfo"></span>
+      <button id="nextPage" class="btn">Next</button>
+    </div>
+  </section>
+</main>
+
+<!-- Drawer -->
+<aside class="drawer" id="drawer" aria-modal="true" aria-labelledby="drawerTitle" role="dialog">
+  <header>
+    <strong id="drawerTitle">Applicant Details</strong>
+    <button id="drawerClose" class="btn" aria-label="Close details">Close</button>
+  </header>
+  <div class="content" id="drawerContent">
+    <div class="muted">Select a row to view details (if backend returns <code>id</code>).</div>
+  </div>
+</aside>
+
+<!-- Help modal -->
+<div id="help" class="help" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+  <div class="box">
+    <h3 id="helpTitle" style="margin-top:0">Keyboard Shortcuts</h3>
+    <ul style="line-height:1.8; margin:0 0 12px 16px">
+      <li><strong>/</strong> – Focus table search</li>
+      <li><strong>r</strong> – Refresh data</li>
+      <li><strong>[</strong> / <strong>]</strong> – Prev / Next page</li>
+      <li><strong>g g</strong> – Scroll to top</li>
+      <li><strong>s</strong> – Save view</li>
+      <li><strong>Shift + S</strong> – Share view</li>
+      <li><strong>?</strong> – Toggle this help</li>
+      <li><strong>⌘/Ctrl + K</strong> – Command palette</li>
+    </ul>
+    <div style="display:flex;justify-content:flex-end"><button id="helpClose" class="btn">Close</button></div>
+  </div>
+</div>
+
+<!-- Command Palette -->
+<div id="cmdk" class="cmdk" role="dialog" aria-modal="true" aria-labelledby="cmdkTitle" aria-describedby="cmdkHint">
+  <div class="box">
+    <div class="head">
+      <strong id="cmdkTitle">Quick Command</strong>
+      <span class="muted" id="cmdkHint">Type to filter • ↑/↓ move • Enter run • Esc close</span>
+      <button id="cmdkClose" class="btn icon" aria-label="Close command palette">✕</button>
+    </div>
+    <div style="display:flex; gap:6px; padding:8px 10px;">
+      <input id="cmdkInput" type="text" placeholder="Try: refresh, save view, share, export, theme, dense, help…" aria-label="Command" />
+      <kbd>⌘K</kbd><kbd>Ctrl K</kbd>
+    </div>
+    <ul id="cmdkList" role="listbox" aria-label="Commands"></ul>
+  </div>
+</div>
+
+<!-- Toasts & live region -->
+<div class="toasts" id="toasts" aria-live="polite"></div>
+<div id="a11yLive" class="sr-only" aria-live="polite"></div>
+
+<script>
+/***********************
+ * BASIC SETTINGS
+ ***********************/
+const BACKEND_BASE = ""; // Same-origin by default.
+
+/***********************
+ * THEME TOGGLE
+ ***********************/
+(function(){
+  const KEY='nu_theme_mode';
+  const root = document.body;
+  const meta = document.getElementById('metaTheme');
+  const apply=(mode)=>{
+    const finalMode = (mode==='auto')
+      ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark':'light')
+      : mode;
+    root.setAttribute('data-theme', finalMode);
+    document.documentElement.style.colorScheme = finalMode;
+    meta?.setAttribute('content', finalMode==='dark' ? '#0a122e' : '#ffffff');
+  };
+  const saved = ['auto','light','dark'].includes(localStorage.getItem(KEY)) ? localStorage.getItem(KEY) : 'dark';
+  apply(saved);
+  document.getElementById('themeBtn')?.addEventListener('click', ()=>{
+    const cur = localStorage.getItem(KEY) || saved;
+    const next = cur==='dark' ? 'light' : 'dark';
+    localStorage.setItem(KEY, next);
+    apply(next);
+    toast('Theme: '+next);
+  });
+})();
+
+/***********************
+ * SIMPLE ICONS
+ ***********************/
+const Icons = {
+  phone:`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.3 1.77.57 2.61a2 2 0 0 1-.45 2.11L8 9a16 16 0 0 0 7 7l.56-1.25a2 2 0 0 1 2.11-.45c.84.27 1.71.45 2.61.57A2 2 0 0 1 22 16.92z"/></svg>`
+};
+
+/***********************
+ * CHARTS (neon-simple canvas)
+ ***********************/
+const COLORS=['#22c55e','#34a3ff','#f5a524','#ff6b6b','#94a3b8','#0b5bd5','#d4af37','#4f46e5','#06b6d4','#f97316'];
+const dpr = () => window.devicePixelRatio || 1;
+function prepCanvas(canvas){
+  const rect = canvas.getBoundingClientRect();
+  const W = Math.max(10, Math.floor(rect.width));
+  const H = Math.max(10, Math.floor(rect.height));
+  const R = dpr();
+  if (canvas.__w!==W || canvas.__h!==H || canvas.__r!==R){
+    canvas.width  = Math.round(W * R);
+    canvas.height = Math.round(H * R);
+    canvas.__w=W; canvas.__h=H; canvas.__r=R;
+  }
+  const ctx = canvas.getContext('2d');
+  ctx.setTransform(R,0,0,R,0,0);
+  ctx.clearRect(0,0,W,H);
+  return {ctx,w:W,h:H};
+}
+function legend(ctx, labels, x=12, y=12){
+  ctx.font='12px Inter, system-ui, sans-serif';
+  labels.forEach((t,i)=>{ ctx.fillStyle = COLORS[i%COLORS.length]; ctx.fillRect(x, y+i*20, 14, 14);
+    ctx.fillStyle = '#c8d6ff'; ctx.fillText(t, x+20, y+12+i*20); });
+}
+const Charts={
+  /* 100% stacked (for bucket share) */
+  stacked100(c, vals, labels){
+    const {ctx,w,h}=prepCanvas(c); c.classList.remove('skeleton');
+    const total = Math.max(1, vals.reduce((a,b)=>a+b,0));
+    const L=16,R=16,T=24,B=28, W=w-L-R, H=h-T-B;
+    ctx.strokeStyle='rgba(200,210,240,.25)'; ctx.beginPath(); ctx.moveTo(L,T+H); ctx.lineTo(L+W,T+H); ctx.stroke();
+    let x=L;
+    vals.forEach((v,i)=>{ const px=(v/total)*W; ctx.fillStyle=COLORS[i%COLORS.length]; ctx.fillRect(x, T+H*0.25, px, H*0.5); x+=px; });
+    /* inline % labels (if room) */
+    x=L; ctx.fillStyle='#c8d6ff'; ctx.font='12px Inter, system-ui';
+    vals.forEach((v)=>{ const px=(v/total)*W; const t= total? ((v/total)*100).toFixed(0)+'%':'0%'; if(px>34){ ctx.fillText(t, x+px/2-10, T+H*0.25-6); } x+=px; });
+    legend(ctx, labels);
+  },
+  barsH(c, labels, values){
+    const {ctx,w,h}=prepCanvas(c); c.classList.remove('skeleton');
+    const max=Math.max(1,...values); const L=160,R=16,T=18,B=22; const W=w-L-R,H=h-T-B; const row=H/Math.max(1,labels.length);
+    ctx.font='12px Inter, system-ui';
+    labels.forEach((lab,i)=>{ const y=T+i*row+row*0.15; ctx.fillStyle='#95a2c4'; ctx.fillText(lab,8,y+12);
+      const bw=(values[i]/max)*W; ctx.fillStyle=COLORS[i%COLORS.length]; ctx.fillRect(L,y,bw,row*0.7); });
+    ctx.strokeStyle='rgba(200,210,240,.25)'; ctx.beginPath(); ctx.moveTo(L,T); ctx.lineTo(L,T+H); ctx.stroke();
+  },
+  pie(c, vals, labels){
+    const {ctx,w,h}=prepCanvas(c); c.classList.remove('skeleton');
+    const total=vals.reduce((a,b)=>a+b,0)||1; let s=-Math.PI/2; const cx=w/2,cy=h/2,r=Math.min(w,h)*0.44;
+    vals.forEach((v,i)=>{ const ang=(v/total)*Math.PI*2; ctx.beginPath(); ctx.moveTo(cx,cy); ctx.fillStyle=COLORS[i%COLORS.length]; ctx.arc(cx,cy,r,s,s+ang); ctx.fill(); s+=ang; });
+    legend(ctx, labels);
+  },
+  hist(c, bins, colorIdx=6, label=''){
+    const {ctx,w,h}=prepCanvas(c); c.classList.remove('skeleton');
+    const L=40,R=16,T=16,B=28, W=w-L-R,H=h-T-B, max=Math.max(1,...bins), bw=W/Math.max(1,bins.length);
+    ctx.fillStyle=COLORS[colorIdx%COLORS.length];
+    bins.forEach((v,i)=>{ const bh=(v/max)*H; ctx.fillRect(L+i*bw,T+(H-bh),bw*0.9,bh); });
+    ctx.strokeStyle='rgba(200,210,240,.25)'; ctx.beginPath(); ctx.moveTo(L,T); ctx.lineTo(L,T+H); ctx.lineTo(L+W,T+H); ctx.stroke();
+    if(label){ ctx.fillStyle='#95a2c4'; ctx.font='12px Inter, system-ui'; ctx.fillText(label, L+6, T+14); }
+  },
+  line2(c, labels, s1, s2, n1='Likelihood %', n2='Confidence %'){
+    const {ctx,w,h}=prepCanvas(c); c.classList.remove('skeleton');
+    const L=40,R=40,T=18,B=24, W=w-L-R,H=h-T-B;
+    ctx.strokeStyle='rgba(200,210,240,.25)'; ctx.beginPath(); ctx.moveTo(L,T); ctx.lineTo(L,T+H); ctx.lineTo(L+W,T+H); ctx.stroke();
+    const plot=(data,col)=>{ ctx.beginPath(); ctx.strokeStyle=col; ctx.lineWidth=2;
+      data.forEach((v,i)=>{ const x=L+(i/Math.max(1,data.length-1))*W; const y=T+(1-(v-0)/(100-0))*H; i?ctx.lineTo(x,y):ctx.moveTo(x,y); }); ctx.stroke(); };
+    plot(s1, COLORS[0]); plot(s2, COLORS[3]);
+    ctx.font='11px Inter, system-ui'; ctx.fillStyle='#95a2c4'; ctx.textAlign='center';
+    const step=Math.max(1,Math.ceil(labels.length/8));
+    labels.forEach((lb,i)=>{ if(i%step===0){ const x=L+(i/(labels.length-1))*W; ctx.fillText(lb, x, h-6); }});
+    ctx.fillStyle=COLORS[0]; ctx.fillRect(w-150,10,12,12); ctx.fillStyle='#c8d6ff'; ctx.fillText(n1, w-130, 20);
+    ctx.fillStyle=COLORS[3]; ctx.fillRect(w-150,28,12,12); ctx.fillStyle='#c8d6ff'; ctx.fillText(n2, w-130, 38);
+  },
+  scatter(c, pts){
+    const {ctx,w,h}=prepCanvas(c); c.classList.remove('skeleton');
+    const L=40,R=16,T=16,B=28,W=w-L-R,H=h-T-B;
+    ctx.strokeStyle='rgba(200,210,240,.25)'; ctx.beginPath(); ctx.moveTo(L,T); ctx.lineTo(L,T+H); ctx.lineTo(L+W,T+H); ctx.stroke();
+    ctx.fillStyle=COLORS[1];
+    pts.forEach(p=>{ const x=L+(p.x/100)*W; const y=T+(1-p.y/100)*H; ctx.beginPath(); ctx.arc(x,y,3,0,Math.PI*2); ctx.fill(); });
+  },
+  bubbles(c, pts){
+    const {ctx,w,h}=prepCanvas(c); c.classList.remove('skeleton');
+    const L=40,R=16,T=16,B=28,W=w-L-R,H=h-T-B;
+    ctx.strokeStyle='rgba(200,210,240,.25)'; ctx.beginPath(); ctx.moveTo(L,T); ctx.lineTo(L,T+H); ctx.lineTo(L+W,T+H); ctx.stroke();
+    pts.forEach((p,i)=>{ const x=L+(p.x/100)*W; const y=T+(1-p.y/100)*H; const r=Math.max(2, Math.sqrt((p.count||1))*2);
+      ctx.beginPath(); ctx.fillStyle = COLORS[i%COLORS.length] + '88'; ctx.arc(x,y,r,0,Math.PI*2); ctx.fill(); });
+  },
+  spark(c, values, colorIdx=0){
+    const {ctx,w,h}=prepCanvas(c);
+    const min=Math.min(...values,0), max=Math.max(...values,1);
+    ctx.beginPath(); ctx.strokeStyle=COLORS[colorIdx%COLORS.length]; ctx.lineWidth=2;
+    values.forEach((v,i)=>{ const x=(i/(Math.max(1,values.length-1)))*w; const y=h-(v-min)/(max-min)*h; i?ctx.lineTo(x,y):ctx.moveTo(x,y); });
+    ctx.stroke();
+  }
+};
+
+/***********************
+ * DASHBOARD (fetches backend)
+ ***********************/
+(function(){
+  if (window.__NU_ADMIN_INIT) return; window.__NU_ADMIN_INIT=true;
+
+  // shorthands
+  const byId = id => document.getElementById(id);
+  const qs   = sel => document.querySelector(sel);
+  const pct  = x => (x*100).toFixed(1)+'%';
+  const titleize = s => (s||'').replace(/\b\w/g,c=>c.toUpperCase());
+  const fmtDate  = s => { try{ return new Date(s).toLocaleString(); }catch{ return s||''; } };
+  const announce = (msg)=>{ const el=byId('a11yLive'); el.textContent=''; setTimeout(()=>el.textContent=msg, 20); };
+
+  // Toasts
+  const toasts=byId('toasts');
+  function toast(msg, ms=3000){ const t=document.createElement('div'); t.className='toast'; t.textContent=msg; toasts.appendChild(t);
+    setTimeout(()=>{ t.style.opacity='0'; t.style.transition='opacity .2s'; setTimeout(()=>t.remove(),200); }, ms); }
+
+  // Network indicator
+  const netDot=byId('netDot');
+  window.addEventListener('online', ()=>{ netDot.style.background='#22c55e'; netDot.title='Network OK'; });
+  window.addEventListener('offline', ()=>{ netDot.style.background='#f97316'; netDot.title='Offline'; toast('You are offline. Showing cached view where possible.', 4000); });
+
+  // chips
+  const chip={ total:byId('chipTotal'), avg:byId('chipAvg'), vh:byId('chipVH'), h:byId('chipH'), m:byId('chipM'), l:byId('chipL'), vl:byId('chipVL') };
+
+  // controls
+  const filterProgram=byId('filterProgram'), filterRegion=byId('filterRegion'), filterBucket=byId('filterBucket');
+  const filterMinConf=byId('filterMinConf'), filterMinConfVal=byId('filterMinConfVal'), filterDays=byId('filterDays'), filterSearch=byId('filterSearch');
+  const autoRefresh=byId('autoRefresh'), applyFilters=byId('applyFilters'), resetFilters=byId('resetFilters'), exportCsv=byId('exportCsv'), exportClientCsv=byId('exportClientCsv');
+  const denseRows=byId('denseRows'); const shareView=byId('shareView');
+
+  // Presets
+  const presetsSel=byId('presets'), savePreset=byId('savePreset'), deletePreset=byId('deletePreset');
+
+  // KPIs
+  const kpiTotal=byId('kpiTotal'), kpiTotalHint=byId('kpiTotalHint');
+  const kpiAvgProb=byId('kpiAvgProb'), kpiAvgConf=byId('kpiAvgConf'), kpiBuckets5=byId('kpiBuckets5');
+  const kpiProbDelta=byId('kpiProbDelta'), kpiConfDelta=byId('kpiConfDelta'), kpiTotalDelta=byId('kpiTotalDelta');
+  const sparkProb=byId('sparkProb'), sparkConf=byId('sparkConf');
+  const lastUpdated=byId('lastUpdated');
+
+  // Queues & table
+  const qCall=byId('queueCallNow'), qWarm=byId('queueWarm'), qNurt=byId('queueNurture');
+  const tblSort=byId('tblSort'), tblDir=byId('tblDir'), tblSize=byId('tblSize'), tblApply=byId('tblApply');
+  const prevPage=byId('prevPage'), nextPage=byId('nextPage'), pageInfo=byId('pageInfo'), tblMeta=byId('tblMeta');
+  const tblBody = qs('#topTable tbody');
+
+  // Insights
+  const insightsList=byId('insightsList');
+
+  // Drawer
+  const drawer=byId('drawer'), drawerClose=byId('drawerClose'), drawerContent=byId('drawerContent');
+  let lastFocused=null;
+  function openDrawer(row){
+    lastFocused=document.activeElement;
+    drawerContent.innerHTML='<div class="muted">Loading…</div>';
+    drawer.classList.add('open'); drawer.setAttribute('aria-hidden','false');
+    drawerClose.focus();
+    if (!row.id){ drawerContent.innerHTML = '<div class="muted">No ID provided by backend for this row.</div>'; return; }
+    getJSON(fullUrl('/api/admin/record/'+encodeURIComponent(row.id)),'metrics')
+      .then((data)=>{
+        if(!data.ok){ drawerContent.innerHTML='<div class="muted">No details available.</div>'; return; }
+        const r = data.record || row;
+        drawerContent.innerHTML = `
+          <div style="font-weight:800;font-size:16px">${titleize(r.first_program||'')}</div>
+          <div class="muted">Applicant ID: ${r.id||'-'}</div>
+          <hr style="border:none;border-top:1px dashed rgba(200,210,240,.25)">
+          <div><b>Likelihood:</b> ${pct(r.prob||0)}</div>
+          <div><b>Confidence:</b> ${pct(r.conf||0)}</div>
+          <div><b>Priority:</b> ${pct((r.prob||0)*(r.conf||0))}</div>
+          <div><b>Student Type:</b> ${titleize(r.student_type||'')}</div>
+          <div><b>Region:</b> ${titleize(r.curr_region||'')}</div>
+          <div><b>Created:</b> ${fmtDate(r.created_at)}</div>`;
+      }).catch(()=>{ drawerContent.innerHTML='<div class="muted">Failed to load details.</div>'; });
+  }
+  function closeDrawer(){
+    drawer.classList.remove('open'); drawer.setAttribute('aria-hidden','true');
+    if (lastFocused && lastFocused.focus) { lastFocused.focus(); }
+  }
+  drawerClose.addEventListener('click', closeDrawer);
+  drawer.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeDrawer(); });
+
+  // State
+  let thresholds={high:0.75, medium:0.5};
+  let page=1, total=0, timer=null, lastMetrics=null, latestRows=[];
+
+  // Abort duplicate fetches
+  let metricsCtrl=null, tableCtrl=null;
+  function fullUrl(path){ const base = BACKEND_BASE.replace(/\/$/,''); return base + path; }
+  async function getJSON(url, kind='metrics'){
+    if (kind==='metrics' && metricsCtrl){ metricsCtrl.abort(); }
+    if (kind==='table'   && tableCtrl){   tableCtrl.abort(); }
+    const ctrl = new AbortController();
+    if (kind==='metrics') metricsCtrl=ctrl; else tableCtrl=ctrl;
+    const r = await fetch(url, { signal: ctrl.signal, credentials: (BACKEND_BASE && BACKEND_BASE.startsWith('http')) ? 'include' : 'same-origin', headers: { 'Accept':'application/json' } });
+    if (r.status===401 || r.status===403){ window.location.href='/login'; return {ok:false}; }
+    if (!r.ok) throw new Error('HTTP '+r.status);
+    return await r.json();
+  }
+
+  // Buckets
+  const DEFAULT_THRESH={ very_high:0.90, high:0.75, medium:0.50, low:0.25 };
+  function bucketOf(prob){
+    const t = { vh:DEFAULT_THRESH.very_high, h:thresholds.high||DEFAULT_THRESH.high, m:thresholds.medium||DEFAULT_THRESH.medium, l:DEFAULT_THRESH.low };
+    if (prob>=t.vh) return {key:'VH',label:'Very High',class:'badge-vh'};
+    if (prob>=t.h)  return {key:'H', label:'High',     class:'badge-h'};
+    if (prob>=t.m)  return {key:'M', label:'Medium',   class:'badge-m'};
+    if (prob>=t.l)  return {key:'L', label:'Low',      class:'badge-l'};
+    return {key:'VL',label:'Very Low',class:'badge-vl'};
+  }
+
+  // URL helpers (shareable)
+  function readFilters(){
+    return {
+      program:filterProgram.value||'',
+      region:filterRegion.value||'',
+      bucket:filterBucket.value||'',
+      min_conf:String(Number(filterMinConf.value||'0')),
+      days:String(Math.max(1, Math.min(365, parseInt(filterDays.value||'30',10)))),
+      search:filterSearch.value||'',
+      sort:tblSort.value||'priority',
+      dir:tblDir.value||'desc',
+      page_size:tblSize.value||'25'
+    };
+  }
+  function applyFiltersFrom(obj={}){
+    filterProgram.value=obj.program||'';
+    filterRegion.value=obj.region||'';
+    filterBucket.value=obj.bucket||'';
+    filterMinConf.value=obj.min_conf||'0';
+    filterMinConfVal.textContent=Number(filterMinConf.value).toFixed(2);
+    filterDays.value=obj.days||'30';
+    filterSearch.value=obj.search||'';
+    tblSort.value=obj.sort||'priority';
+    tblDir.value=obj.dir||'desc';
+    if(obj.page_size) tblSize.value=String(obj.page_size);
+  }
+  function buildQS(basePath){
+    const path = fullUrl(basePath);
+    const f = readFilters();
+    const qs = new URLSearchParams({
+      days:f.days, min_conf:f.min_conf, sort:f.sort, dir:f.dir, page_size:f.page_size
+    });
+    if (f.program) qs.set('program', f.program);
+    if (f.region)  qs.set('region', f.region);
+    if (['H','M','L'].includes(f.bucket)) qs.set('bucket', f.bucket); // VH/VL derived client-side
+    return path + '?' + qs.toString();
+  }
+  function syncURL(){
+    const f=readFilters();
+    const u=new URL(location.href);
+    Object.entries(f).forEach(([k,v])=>{ if(v) u.searchParams.set(k,v); else u.searchParams.delete(k); });
+    history.replaceState({},'',u);
+  }
+  function hydrateFromURL(){
+    const u=new URL(location.href); const obj={};
+    ['program','region','bucket','min_conf','days','search','sort','dir','page_size'].forEach(k=>{ if(u.searchParams.has(k)) obj[k]=u.searchParams.get(k); });
+    if(Object.keys(obj).length){ applyFiltersFrom(obj); }
+  }
+
+  // Queues
+  function renderQueue(ul, arr){
+    ul.innerHTML='';
+    if (!arr || !arr.length){
+      const li=document.createElement('li'); li.style.color='var(--muted)'; li.textContent='No applicants.'; ul.appendChild(li); return;
+    }
+    arr.forEach(r=>{
+      const b = bucketOf(r.prob||0);
+      const li = document.createElement('li');
+      li.className='queue-row';
+      li.innerHTML = `
+        <span class="badge ${b.class}">${b.label}</span>
+        <span class="q-pri"><strong>${pct((r.prob||0)*(r.conf||0))}</strong></span>
+        <span class="q-prob">${pct(r.prob||0)}</span>
+        <span class="q-conf">${pct(r.conf||0)}</span>
+        <span class="q-prog">${titleize(r.first_program||'')}</span>
+        <span class="q-seg">${titleize(r.student_type||'')}</span>
+        <span class="q-reg">${titleize(r.curr_region||'')}</span>`;
+      if (r.id){ li.style.cursor='pointer'; li.title='Open details'; li.addEventListener('click', ()=> openDrawer(r)); }
+      ul.appendChild(li);
+    });
+  }
+
+  function setDelta(el, prev, curr){
+    if (prev==null || curr==null) { el.style.display='none'; return; }
+    const diff=(curr-prev); if (Math.abs(diff)<1e-6){ el.style.display='none'; return; }
+    const pctDiff=(prev===0?0:(diff/prev*100));
+    el.textContent=(pctDiff>0?'▲ ':'▼ ')+Math.abs(pctDiff).toFixed(1)+'%';
+    el.className='delta '+(pctDiff>=0?'up':'down'); el.style.display='';
+  }
+
+  function downloadCanvas(sel, name){
+    const c=document.querySelector(sel); if(!c) return;
+    const a=document.createElement('a'); a.href=c.toDataURL('image/png'); a.download=name||'chart.png';
+    document.body.appendChild(a); a.click(); a.remove();
+  }
+
+  function applyClientSearch(rows){
+    const q=(filterSearch.value||'').trim().toLowerCase(); if(!q) return rows;
+    const tokens=q.split(/\s+/);
+    return rows.filter(r=>{
+      const hay=[r.first_program,r.curr_region,r.student_type].map(x=>(x||'').toLowerCase()).join(' ');
+      return tokens.every(t=> hay.includes(t));
+    });
+  }
+
+  // ========= Load Metrics =========
+  async function loadAll(){
+    announce('Loading dashboard'); lastUpdated.textContent='Loading…';
+    const cacheKey='nu_metrics_cache';
+    try{
+      const m = await getJSON(buildQS('/api/admin/metrics'),'metrics');
+      if(!m.ok){ lastUpdated.textContent='Error loading metrics'; toast('Metrics failed to load', 3500); return; }
+      sessionStorage.setItem(cacheKey, JSON.stringify(m));
+      drawAll(m);
+      lastMetrics=m;
+      exportCsv.href=buildQS('/api/admin/export.csv');
+      lastUpdated.textContent='Last updated: '+new Date().toLocaleString();
+      announce('Dashboard updated');
+      page=1; await loadTable();
+    }catch(e){
+      const cached=sessionStorage.getItem(cacheKey);
+      if(cached){
+        drawAll(JSON.parse(cached));
+        toast('Showing cached metrics (offline or server issue)', 4000);
+      }else{
+        lastUpdated.textContent='Failed to load metrics'; toast('Failed to load metrics', 4000);
+      }
+    }
+  }
+
+  function drawAll(m){
+    thresholds=m.thresholds||thresholds;
+
+    // Fill selects (preserve)
+    const keep=(sel,val)=>{ const v=val||''; if (Array.from(sel.options).some(o=>o.value===v)) sel.value=v; };
+    const curProg=filterProgram.value, curReg=filterRegion.value;
+    filterProgram.innerHTML='<option value="">All Programs</option>';
+    (m.program_tokens||[]).forEach(tok=>{ const o=document.createElement('option'); o.value=tok; o.textContent=titleize(tok); filterProgram.appendChild(o); });
+    keep(filterProgram,curProg);
+    filterRegion.innerHTML='<option value="">All Regions</option>';
+    (m.region_tokens||[]).forEach(tok=>{ const o=document.createElement('option'); o.value=tok; o.textContent=titleize(tok); filterRegion.appendChild(o); });
+    keep(filterRegion,curReg);
+
+    // Buckets / counts (compute for chips & chart)
+    const counts5={VH:0,H:0,M:0,L:0,VL:0};
+    (m.top||[]).forEach(r=>counts5[bucketOf(r.prob||0).key]++);
+    if ((m.top||[]).length<10){
+      counts5.H=m.summary.high||0; counts5.M=m.summary.med||0; counts5.L=m.summary.low||0;
+      counts5.VH=Math.round(counts5.H*0.3); counts5.H=Math.max(0,counts5.H-counts5.VH);
+      counts5.VL=Math.round(counts5.L*0.3); counts5.L=Math.max(0,counts5.L-counts5.VL);
+    }
+
+    // KPIs + chips
+    const n=m.summary.n||0;
+    kpiTotal.textContent=String(n);
+    kpiTotalHint.textContent=(m.summary.n_recent ? `${m.summary.n_recent} in last ${filterDays.value}d` : '');
+    kpiAvgProb.textContent=pct(m.summary.avg_prob||0);
+    kpiAvgConf.textContent=pct(m.summary.avg_conf||0);
+    kpiBuckets5.textContent=`${counts5.VH} / ${counts5.H} / ${counts5.M} / ${counts5.L} / ${counts5.VL}`;
+
+    chip.total.textContent=`Total: ${n}`;
+    chip.avg.textContent=`Avg L2E: ${pct(m.summary.avg_prob||0)} • Conf: ${pct(m.summary.avg_conf||0)}`;
+    chip.vh.textContent=`VH: ${counts5.VH}`; chip.h.textContent=`H: ${counts5.H}`; chip.m.textContent=`M: ${counts5.M}`; chip.l.textContent=`L: ${counts5.L}`; chip.vl.textContent=`VL: ${counts5.VL}`;
+
+    const last2=(m.trend||[]).slice(-2);
+    if(last2.length===2){
+      setDelta(kpiProbDelta, (last2[0].avg_prob||0), (last2[1].avg_prob||0));
+      setDelta(kpiConfDelta, (last2[0].avg_conf||0), (last2[1].avg_conf||0));
+      setDelta(kpiTotalDelta, (last2[0].count||0), (last2[1].count||0));
+    } else { kpiProbDelta.style.display='none'; kpiConfDelta.style.display='none'; kpiTotalDelta.style.display='none'; }
+
+    const pSeries=(m.trend||[]).map(t=>Number((t.avg_prob||0)*100));
+    const cSeries=(m.trend||[]).map(t=>Number((t.avg_conf||0)*100));
+    if(pSeries.length) Charts.spark(sparkProb, pSeries, 0);
+    if(cSeries.length) Charts.spark(sparkConf, cSeries, 3);
+
+    // Charts + summaries
+    drawCharts(m);
+    renderInsights(m, counts5);
+  }
+
+  function drawCharts(m){
+    const counts5={VH:0,H:0,M:0,L:0,VL:0};
+    (m.top||[]).forEach(r=>counts5[bucketOf(r.prob||0).key]++);
+    if ((m.top||[]).length<10){
+      counts5.H=m.summary.high||0; counts5.M=m.summary.med||0; counts5.L=m.summary.low||0;
+      counts5.VH=Math.round(counts5.H*0.3); counts5.H=Math.max(0,counts5.H-counts5.VH);
+      counts5.VL=Math.round(counts5.L*0.3); counts5.L=Math.max(0,counts5.L-counts5.VL);
+    }
+    const bucketVals=[counts5.VH,counts5.H,counts5.M,counts5.L,counts5.VL];
+    const bucketLabs=['Very High','High','Medium','Low','Very Low'];
+    const totalBucket = bucketVals.reduce((a,b)=>a+b,0);
+    byId('sumBuckets').textContent = totalBucket ? `VH ${counts5.VH} • H ${counts5.H} • M ${counts5.M} • L ${counts5.L} • VL ${counts5.VL}` : 'No data';
+
+    Charts.stacked100(byId('chartBuckets5'), bucketVals, bucketLabs);
+    Charts.barsH(byId('chartPrograms'), (m.programs||[]).map(p=>titleize(p.program)), (m.programs||[]).map(p=>p.count));
+    Charts.barsH(byId('chartRegions'),  (m.regions||[]).map(r=>titleize(r.region)), (m.regions||[]).map(r=>r.count));
+    byId('sumPrograms').textContent = (m.programs?.length?`Top ${Math.min(m.programs.length,10)} programs`:'No data');
+    byId('sumRegions').textContent  = (m.regions?.length?`${m.regions.length} regions`:'No data');
+
+    Charts.pie(byId('chartStudentType'), (m.student_type||[]).map(x=>x.count), (m.student_type||[]).map(x=>titleize(x.type)));
+    byId('sumTypes').textContent = (m.student_type?.length?m.student_type.map(x=>`${titleize(x.type)}: ${x.count}`).join(' • '):'No data');
+
+    Charts.hist(byId('chartHistProb'), (m.hist_prob||[]).map(x=>x||0), 6, 'Likelihood');
+    Charts.hist(byId('chartHistConf'), (m.hist_conf||[]).map(x=>x||0), 1, 'Confidence');
+
+    const pSeries=(m.trend||[]).map(t=>Number((t.avg_prob||0)*100));
+    const cSeries=(m.trend||[]).map(t=>Number((t.avg_conf||0)*100));
+    Charts.line2(byId('chartTrend'), (m.trend||[]).map(t=>t.date), pSeries, cSeries);
+    Charts.bubbles(byId('chartHeat'), (m.heat||[]).map(pt=>({x:pt.x,y:pt.y,count:pt.count||1})));
+    Charts.scatter(byId('chartScatter'), (m.top||[]).map(r=>({x:Number((r.prob||0)*100), y:Number((r.conf||0)*100)})));
+  }
+
+  function renderInsights(m, counts5){
+    const items=[];
+    const medUp = (counts5.M + counts5.L + counts5.VL) > (counts5.VH + counts5.H);
+    if(medUp) items.push('Most applicants are Medium‑or‑below likelihood. Consider targeted nudges (fee‑waiver trials, counselor callbacks, deadline reminders).');
+    if((m.summary.avg_conf||0) < 0.55) items.push('Prediction confidence is modest. Encourage profile completion / document submission to improve confidence.');
+    const trend=(m.trend||[]); if(trend.length>=2){
+      const a=trend.at(-2), b=trend.at(-1);
+      if ((b.avg_prob||0) < (a.avg_prob||0)) items.push('Likelihood dipped day‑over‑day. Review campaigns and counselor SLAs for the last 48h.');
+      if ((b.count||0) > (a.count||0)*1.25) items.push('Application surge detected. Assess counselor capacity and auto‑routing rules.');
+    }
+    insightsList.innerHTML = items.length
+      ? items.map(t=>`<li>${t}</li>`).join('')
+      : `<li class="muted">No urgent issues. Keep monitoring.</li>`;
+  }
+
+  async function loadTable(){
+    const qsParams=new URLSearchParams({
+      days:Math.max(1, parseInt(filterDays.value||'30',10)),
+      page:String(page),
+      page_size:String(Number(tblSize.value||25)),
+      sort:tblSort.value||'priority',
+      dir:tblDir.value||'desc',
+      min_conf:String(Number(filterMinConf.value||0))
+    });
+    if (filterProgram.value) qsParams.set('program', filterProgram.value);
+    if (filterRegion.value)  qsParams.set('region', filterRegion.value);
+    const b=filterBucket.value; if (b==='H'||b==='M'||b==='L') qsParams.set('bucket', b);
+
+    try{
+      const res=await getJSON(fullUrl('/api/admin/table?'+qsParams.toString()), 'table');
+      if(!res.ok) return;
+      total=res.total||0; const size=Number(tblSize.value||25);
+      const pages=Math.max(1, Math.ceil(total/size));
+      pageInfo.textContent='Page '+res.page+' of '+pages; tblMeta.textContent=total+' records';
+      latestRows=applyClientSearch(res.rows||[]); renderTable(latestRows);
+    }catch{ toast('Table failed to load', 3500); }
+  }
+
+  function renderTable(rows){
+    tblBody.innerHTML='';
+    if(!rows.length){
+      const tr=document.createElement('tr'); tr.innerHTML='<td colspan="8" class="muted">No records for filters.</td>'; tblBody.appendChild(tr); return;
+    }
+    rows.forEach(r=>{
+      const b=bucketOf(r.prob||0); const tr=document.createElement('tr'); tr.className='row-'+b.key.toLowerCase();
+      tr.innerHTML=`
+        <td><span class="badge ${b.class}">${b.label}</span></td>
+        <td><strong>${pct(r.priority||0)}</strong></td>
+        <td>${pct(r.prob||0)}</td>
+        <td>${pct(r.conf||0)}</td>
+        <td>${titleize(r.first_program||'')}</td>
+        <td>${titleize(r.student_type||'')}</td>
+        <td>${titleize(r.curr_region||'')}</td>
+        <td>${fmtDate(r.created_at)}</td>`;
+      if (r.id){ tr.style.cursor='pointer'; tr.title='Open details'; tr.addEventListener('click', ()=> openDrawer(r)); }
+      tblBody.appendChild(tr);
+    });
+  }
+
+  function exportVisibleCsv(){
+    if(!latestRows||!latestRows.length){ alert('No rows to export.'); return; }
+    const header=['bucket','priority','prob','conf','first_program','student_type','curr_region','created_at'];
+    const lines=[header.join(',')];
+    latestRows.forEach(r=>{
+      const b=bucketOf(r.prob||0).label;
+      const row=[b,(r.priority||0).toFixed(4),(r.prob||0).toFixed(4),(r.conf||0).toFixed(4),
+        `"${
+          (r.first_program||'').replace(/"/g,'""')
+        }"`,`"${
+          (r.student_type||'').replace(/"/g,'""')
+        }"`,`"${
+          (r.curr_region||'').replace(/"/g,'""')
+        }"`,`"${
+          fmtDate(r.created_at)
+        }"`];
+      lines.push(row.join(','));
+    });
+    const blob=new Blob([lines.join('\n')],{type:'text/csv;charset=utf-8;'});
+    const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='nu-dashboard-visible.csv';
+    document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+  }
+
+  // Presets (localStorage)
+  function readPresetForm(){ return { program:filterProgram.value||'', region:filterRegion.value||'', bucket:filterBucket.value||'', min_conf:filterMinConf.value||'0', days:filterDays.value||'30', sort:tblSort.value||'priority', dir:tblDir.value||'desc', page_size:tblSize.value||'25', search:filterSearch.value||'' }; }
+  function applyPreset(p){ applyFiltersFrom(p); }
+  function loadPresets(){
+    presetsSel.innerHTML='<option value="">View: Default</option>';
+    const saved=JSON.parse(localStorage.getItem('nu_presets')||'{}');
+    Object.keys(saved).forEach(name=>{ const o=document.createElement('option'); o.value=name; o.textContent='View: '+name; presetsSel.appendChild(o); });
+  }
+  savePreset.addEventListener('click', ()=>{
+    const name=prompt('Name this view (e.g., “CS High Confidence 7d”)'); if(!name) return;
+    const saved=JSON.parse(localStorage.getItem('nu_presets')||'{}'); saved[name]=readPresetForm();
+    localStorage.setItem('nu_presets', JSON.stringify(saved)); loadPresets(); presetsSel.value=name; toast('View saved');
+    syncURL();
+  });
+  deletePreset.addEventListener('click', ()=>{
+    const name=presetsSel.value; if(!name){ alert('Select a saved view first.'); return; }
+    const saved=JSON.parse(localStorage.getItem('nu_presets')||'{}'); delete saved[name];
+    localStorage.setItem('nu_presets', JSON.stringify(saved)); loadPresets(); presetsSel.value=''; toast('View deleted');
+    syncURL();
+  });
+  presetsSel.addEventListener('change', ()=>{
+    const name=presetsSel.value; if(!name) return;
+    const saved=JSON.parse(localStorage.getItem('nu_presets')||'{}');
+    if(saved[name]){ applyPreset(saved[name]); applyFilters.click(); }
+  });
+  loadPresets();
+
+  // Shareable link
+  shareView.addEventListener('click', ()=>{
+    syncURL();
+    navigator.clipboard.writeText(location.href).then(()=> toast('Shareable link copied')).catch(()=> toast('Copy failed'));
+  });
+
+  // Events
+  document.querySelectorAll('[data-dl]').forEach(btn=> btn.addEventListener('click', ()=> downloadCanvas(btn.getAttribute('data-dl'), 'chart.png')) );
+  filterMinConf.addEventListener('input', ()=> filterMinConfVal.textContent = Number(filterMinConf.value).toFixed(2));
+  const debounce=(fn,ms=250)=>{ let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a),ms); }; };
+  filterSearch.addEventListener('input', debounce(()=> renderTable(applyClientSearch(latestRows)), 120));
+  applyFilters.addEventListener('click', ()=>{ page=1; syncURL(); loadAll(); });
+  resetFilters.addEventListener('click', ()=>{ filterProgram.value=''; filterRegion.value=''; filterBucket.value=''; filterMinConf.value='0'; filterMinConfVal.textContent='0.00'; filterDays.value='30'; filterSearch.value=''; page=1; syncURL(); loadAll(); });
+  exportClientCsv.addEventListener('click', exportVisibleCsv);
+  denseRows.addEventListener('change', ()=>{ document.getElementById('topTable').classList.toggle('dense', denseRows.checked); });
+  tblApply.addEventListener('click', ()=>{ page=1; syncURL(); loadTable(); });
+  prevPage.addEventListener('click', ()=>{ if(page>1){ page--; loadTable(); }});
+  nextPage.addEventListener('click', ()=>{ const size=Number(tblSize.value||25); const pages=Math.max(1,Math.ceil(total/size)); if(page<pages){ page++; loadTable(); }});
+  window.addEventListener('beforeunload', ()=>{ if(timer) clearInterval(timer); });
+
+  // Auto-refresh
+  autoRefresh.addEventListener('change', ()=>{ if (timer) { clearInterval(timer); timer=null; } if (autoRefresh.checked){ timer = setInterval(loadAll, 60000); toast('Auto‑refresh on'); } });
+
+  // Help modal
+  const help=byId('help'), helpBtn=byId('helpBtn'), helpClose=byId('helpClose');
+  function toggleHelp(on){ help.classList.toggle('open', on ?? !help.classList.contains('open')); (on ?? help.classList.contains('open')) && helpClose.focus(); }
+  helpBtn.addEventListener('click', ()=> toggleHelp(true));
+  helpClose.addEventListener('click', ()=> toggleHelp(false));
+  help.addEventListener('click', (e)=>{ if(e.target===help) toggleHelp(false); });
+  document.addEventListener('keydown', (e)=>{
+    if(e.target.matches('input,select,textarea')) return;
+    if(e.key==='/'){ e.preventDefault(); filterSearch.focus(); }
+    if(e.key==='r'){ e.preventDefault(); loadAll(); toast('Refreshing…', 1200); }
+    if(e.key==='?'){ e.preventDefault(); toggleHelp(); }
+    if(e.key===']'){ e.preventDefault(); nextPage.click(); }
+    if(e.key==='['){ e.preventDefault(); prevPage.click(); }
+    if(e.key==='g'){ let first=true; const h=(ev)=>{ if(ev.key==='g' && first){ first=false; window.scrollTo({top:0,behavior:'smooth'}); document.removeEventListener('keydown',h); } }; document.addEventListener('keydown',h); }
+    if(e.key==='s' && !e.shiftKey){ e.preventDefault(); savePreset.click(); }
+    if(e.key==='S' && e.shiftKey){ e.preventDefault(); shareView.click(); }
+  });
+
+  // Redraw charts on resize (no re-fetch)
+  let rT=null;
+  const replot=()=>{ clearTimeout(rT); rT=setTimeout(()=>{ if (!lastMetrics) return; drawCharts(lastMetrics); }, 120); };
+  new ResizeObserver(replot).observe(document.body);
+
+  // Init
+  hydrateFromURL();
+  filterMinConfVal.textContent = Number(filterMinConf.value).toFixed(2);
+  document.querySelectorAll('[data-dl]').forEach(btn=> btn.addEventListener('click', ()=> downloadCanvas(btn.getAttribute('data-dl'), 'chart.png')) );
+  loadAll();
+})();
+
+/***********************
+ * FRONTEND-ONLY ENHANCERS (No backend changes)
+ * - High-Contrast toggle
+ * - Persistent Dense toggle
+ * - Command Palette (⌘/Ctrl+K)
+ ***********************/
+(function(){
+  // High-contrast toggle (persist)
+  const HC_KEY='nu_contrast';
+  const root=document.body;
+  const hcBtn=document.getElementById('contrastBtn');
+  if(localStorage.getItem(HC_KEY)==='high'){ root.setAttribute('data-contrast','high'); }
+  hcBtn?.addEventListener('click', ()=>{
+    const on = root.getAttribute('data-contrast')==='high';
+    root.setAttribute('data-contrast', on?'':'high');
+    localStorage.setItem(HC_KEY, on?'':'high');
+  });
+
+  // Persist "Dense rows"
+  const DENSE_KEY='nu_dense';
+  const dense=document.getElementById('denseRows');
+  if(localStorage.getItem(DENSE_KEY)==='1'){ dense.checked=true; document.getElementById('topTable')?.classList.add('dense'); }
+  dense?.addEventListener('change', ()=> localStorage.setItem(DENSE_KEY, dense.checked?'1':'0'));
+
+  // ===== Command Palette (⌘/Ctrl + K) =====
+  const pal=document.getElementById('cmdk');
+  const input=document.getElementById('cmdkInput');
+  const list=document.getElementById('cmdkList');
+  const closeBtn=document.getElementById('cmdkClose');
+  const commands=[
+    {label:'Refresh data', hotkey:'r', action:()=> document.getElementById('applyFilters')?.click()},
+    {label:'Save view', hotkey:'s', action:()=> document.getElementById('savePreset')?.click()},
+    {label:'Share view', hotkey:'Shift+S', action:()=> document.getElementById('shareView')?.click()},
+    {label:'Export visible CSV', action:()=> document.getElementById('exportClientCsv')?.click()},
+    {label:'Export server CSV', action:()=> document.getElementById('exportCsv')?.click()},
+    {label:'Next page', hotkey:']', action:()=> document.getElementById('nextPage')?.click()},
+    {label:'Prev page', hotkey:'[', action:()=> document.getElementById('prevPage')?.click()},
+    {label:'Toggle dense rows', action:()=> document.getElementById('denseRows')?.click()},
+    {label:'Toggle theme', action:()=> document.getElementById('themeBtn')?.click()},
+    {label:'High contrast mode', action:()=> document.getElementById('contrastBtn')?.click()},
+    {label:'Help / shortcuts', hotkey:'?', action:()=> document.getElementById('helpBtn')?.click()}
+  ];
+  let last=null, idx=0, current=commands;
+
+  // Focus trap
+  const FOCUSABLE='a[href],button:not([disabled]),input,select,textarea,[tabindex]:not([tabindex="-1"])';
+  function trap(scope){
+    const nodes=[...scope.querySelectorAll(FOCUSABLE)];
+    const first=nodes[0], last=nodes[nodes.length-1];
+    scope.addEventListener('keydown', (e)=>{
+      if(e.key==='Tab'){
+        if(e.shiftKey && document.activeElement===first){ e.preventDefault(); last.focus(); }
+        if(!e.shiftKey && document.activeElement===last){ e.preventDefault(); first.focus(); }
+      }
+    });
+  }
+
+  function openPal(){
+    pal.classList.add('open');
+    last=document.activeElement;
+    input.value=''; filter('');
+    input.focus();
+    trap(pal);
+  }
+  function closePal(){ pal.classList.remove('open'); last&&last.focus(); }
+  function filter(q){
+    current = !q ? commands : commands.filter(c=> c.label.toLowerCase().includes(q.toLowerCase()));
+    list.innerHTML = current.map((c,i)=>`<li role="option" data-i="${i}" ${i===0?'class="active"':''}>${c.label} ${c.hotkey?`<kbd>${c.hotkey}</kbd>`:''}</li>`).join('');
+    idx=0;
+  }
+  function move(){
+    list.querySelectorAll('li').forEach((n,i)=> n.classList.toggle('active', i===idx));
+    list.children[idx]?.scrollIntoView({block:'nearest'});
+  }
+
+  document.addEventListener('keydown', (e)=>{
+    if((e.metaKey||e.ctrlKey) && (e.key==='k' || e.key==='K')){ e.preventDefault(); openPal(); }
+  });
+  input?.addEventListener('input', (e)=> filter(e.target.value));
+  list?.addEventListener('click', (e)=>{
+    const li=e.target.closest('li'); if(!li) return; const i=+li.dataset.i; closePal(); current[i]?.action?.();
+  });
+  list?.addEventListener('keydown', (e)=>{
+    if(e.key==='ArrowDown'){ idx=Math.min(current.length-1, idx+1); move(); e.preventDefault(); }
+    if(e.key==='ArrowUp'){ idx=Math.max(0, idx-1); move(); e.preventDefault(); }
+    if(e.key==='Enter'){ const sel=list.querySelectorAll('li')[idx]; sel?.click(); }
+    if(e.key==='Escape'){ closePal(); }
+  });
+  document.getElementById('cmdkClose')?.addEventListener('click', closePal);
+  pal?.addEventListener('click', (e)=> { if(e.target===pal) closePal(); });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+{
+  "items": [
+    { "code": "137400000", "region_code": "130000000", "name": "Metro Manila", "token": "metro manila" },
+
+    { "code": "012800000", "region_code": "010000000", "name": "Ilocos Norte", "token": "ilocos norte" },
+    { "code": "012900000", "region_code": "010000000", "name": "Ilocos Sur", "token": "ilocos sur" },
+    { "code": "013300000", "region_code": "010000000", "name": "La Union", "token": "la union" },
+    { "code": "015500000", "region_code": "010000000", "name": "Pangasinan", "token": "pangasinan" },
+
+    { "code": "020900000", "region_code": "020000000", "name": "Batanes", "token": "batanes" },
+    { "code": "021500000", "region_code": "020000000", "name": "Cagayan", "token": "cagayan" },
+    { "code": "023100000", "region_code": "020000000", "name": "Isabela", "token": "isabela" },
+    { "code": "025000000", "region_code": "020000000", "name": "Nueva Vizcaya", "token": "nueva vizcaya" },
+    { "code": "025700000", "region_code": "020000000", "name": "Quirino", "token": "quirino" },
+
+    { "code": "030800000", "region_code": "030000000", "name": "Bataan", "token": "bataan" },
+    { "code": "031400000", "region_code": "030000000", "name": "Bulacan", "token": "bulacan" },
+    { "code": "034900000", "region_code": "030000000", "name": "Nueva Ecija", "token": "nueva ecija" },
+    { "code": "035400000", "region_code": "030000000", "name": "Pampanga", "token": "pampanga" },
+    { "code": "036900000", "region_code": "030000000", "name": "Tarlac", "token": "tarlac" },
+    { "code": "037100000", "region_code": "030000000", "name": "Zambales", "token": "zambales" },
+    { "code": "037700000", "region_code": "030000000", "name": "Aurora", "token": "aurora" },
+
+    { "code": "041000000", "region_code": "040000000", "name": "Batangas", "token": "batangas" },
+    { "code": "042100000", "region_code": "040000000", "name": "Cavite", "token": "cavite" },
+    { "code": "043400000", "region_code": "040000000", "name": "Laguna", "token": "laguna" },
+    { "code": "045600000", "region_code": "040000000", "name": "Quezon", "token": "quezon" },
+    { "code": "045800000", "region_code": "040000000", "name": "Rizal", "token": "rizal" },
+
+    { "code": "174000000", "region_code": "170000000", "name": "Marinduque", "token": "marinduque" },
+    { "code": "175100000", "region_code": "170000000", "name": "Occidental Mindoro", "token": "occidental mindoro" },
+    { "code": "175200000", "region_code": "170000000", "name": "Oriental Mindoro", "token": "oriental mindoro" },
+    { "code": "175300000", "region_code": "170000000", "name": "Palawan", "token": "palawan" },
+    { "code": "175900000", "region_code": "170000000", "name": "Romblon", "token": "romblon" },
+
+    { "code": "050500000", "region_code": "050000000", "name": "Albay", "token": "albay" },
+    { "code": "051600000", "region_code": "050000000", "name": "Camarines Norte", "token": "camarines norte" },
+    { "code": "051700000", "region_code": "050000000", "name": "Camarines Sur", "token": "camarines sur" },
+    { "code": "052000000", "region_code": "050000000", "name": "Catanduanes", "token": "catanduanes" },
+    { "code": "054100000", "region_code": "050000000", "name": "Masbate", "token": "masbate" },
+    { "code": "056200000", "region_code": "050000000", "name": "Sorsogon", "token": "sorsogon" },
+
+    { "code": "060400000", "region_code": "060000000", "name": "Aklan", "token": "aklan" },
+    { "code": "060600000", "region_code": "060000000", "name": "Antique", "token": "antique" },
+    { "code": "061900000", "region_code": "060000000", "name": "Capiz", "token": "capiz" },
+    { "code": "063000000", "region_code": "060000000", "name": "Iloilo", "token": "iloilo" },
+    { "code": "067900000", "region_code": "060000000", "name": "Guimaras", "token": "guimaras" },
+
+    { "code": "071200000", "region_code": "070000000", "name": "Bohol", "token": "bohol" },
+    { "code": "072200000", "region_code": "070000000", "name": "Cebu", "token": "cebu" },
+
+    { "code": "087800000", "region_code": "080000000", "name": "Biliran", "token": "biliran" },
+    { "code": "082600000", "region_code": "080000000", "name": "Eastern Samar", "token": "eastern samar" },
+    { "code": "083700000", "region_code": "080000000", "name": "Leyte", "token": "leyte" },
+    { "code": "084800000", "region_code": "080000000", "name": "Northern Samar", "token": "northern samar" },
+    { "code": "086000000", "region_code": "080000000", "name": "Samar", "token": "samar" },
+    { "code": "086400000", "region_code": "080000000", "name": "Southern Leyte", "token": "southern leyte" },
+
+    { "code": "097200000", "region_code": "090000000", "name": "Zamboanga del Norte", "token": "zamboanga del norte" },
+    { "code": "097300000", "region_code": "090000000", "name": "Zamboanga del Sur", "token": "zamboanga del sur" },
+    { "code": "098300000", "region_code": "090000000", "name": "Zamboanga Sibugay", "token": "zamboanga sibugay" },
+
+    { "code": "101300000", "region_code": "100000000", "name": "Bukidnon", "token": "bukidnon" },
+    { "code": "101800000", "region_code": "100000000", "name": "Camiguin", "token": "camiguin" },
+    { "code": "103500000", "region_code": "100000000", "name": "Lanao del Norte", "token": "lanao del norte" },
+    { "code": "104200000", "region_code": "100000000", "name": "Misamis Occidental", "token": "misamis occidental" },
+    { "code": "104300000", "region_code": "100000000", "name": "Misamis Oriental", "token": "misamis oriental" },
+
+    { "code": "112300000", "region_code": "110000000", "name": "Davao del Norte", "token": "davao del norte" },
+    { "code": "112400000", "region_code": "110000000", "name": "Davao del Sur", "token": "davao del sur" },
+    { "code": "112500000", "region_code": "110000000", "name": "Davao Oriental", "token": "davao oriental" },
+    { "code": "118200000", "region_code": "110000000", "name": "Davao de Oro", "token": "davao de oro" },
+    { "code": "118600000", "region_code": "110000000", "name": "Davao Occidental", "token": "davao occidental" },
+
+    { "code": "124700000", "region_code": "120000000", "name": "Cotabato", "token": "cotabato" },
+    { "code": "126300000", "region_code": "120000000", "name": "South Cotabato", "token": "south cotabato" },
+    { "code": "126500000", "region_code": "120000000", "name": "Sultan Kudarat", "token": "sultan kudarat" },
+    { "code": "128000000", "region_code": "120000000", "name": "Sarangani", "token": "sarangani" },
+
+    { "code": "160200000", "region_code": "160000000", "name": "Agusan del Norte", "token": "agusan del norte" },
+    { "code": "160300000", "region_code": "160000000", "name": "Agusan del Sur", "token": "agusan del sur" },
+    { "code": "166700000", "region_code": "160000000", "name": "Surigao del Norte", "token": "surigao del norte" },
+    { "code": "166800000", "region_code": "160000000", "name": "Surigao del Sur", "token": "surigao del sur" },
+    { "code": "168500000", "region_code": "160000000", "name": "Dinagat Islands", "token": "dinagat islands" },
+
+    { "code": "140100000", "region_code": "140000000", "name": "Abra", "token": "abra" },
+    { "code": "141100000", "region_code": "140000000", "name": "Benguet", "token": "benguet" },
+    { "code": "142700000", "region_code": "140000000", "name": "Ifugao", "token": "ifugao" },
+    { "code": "143200000", "region_code": "140000000", "name": "Kalinga", "token": "kalinga" },
+    { "code": "144400000", "region_code": "140000000", "name": "Mountain Province", "token": "mountain province" },
+    { "code": "148100000", "region_code": "140000000", "name": "Apayao", "token": "apayao" },
+
+    { "code": "150700000", "region_code": "190000000", "name": "Basilan", "token": "basilan" },
+    { "code": "153600000", "region_code": "190000000", "name": "Lanao del Sur", "token": "lanao del sur" },
+    { "code": "198700000", "region_code": "190000000", "name": "Maguindanao del Norte", "token": "maguindanao del norte" },
+    { "code": "198800000", "region_code": "190000000", "name": "Maguindanao del Sur", "token": "maguindanao del sur" },
+    { "code": "156600000", "region_code": "190000000", "name": "Sulu", "token": "sulu" },
+    { "code": "157000000", "region_code": "190000000", "name": "Tawi-Tawi", "token": "tawi-tawi" },
+
+    { "code": "064500000", "region_code": "180000000", "name": "Negros Occidental", "token": "negros occidental" },
+    { "code": "074600000", "region_code": "180000000", "name": "Negros Oriental", "token": "negros oriental" },
+    { "code": "076100000", "region_code": "180000000", "name": "Siquijor", "token": "siquijor" }
+  ]
+}

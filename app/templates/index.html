@@ -1,0 +1,585 @@
+{% block content %}
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Poppins:wght@600;700;800;900&display=swap" rel="stylesheet" />
+
+<!-- Preload key images -->
+<link rel="preload" as="image"
+      href="{{ url_for('static', filename='images/campus/comlab.png') }}"
+      imagesrcset="{{ url_for('static', filename='images/campus/comlab.png') }} 1200w, {{ url_for('static', filename='images/campus/comlab@2x.png') }} 2000w"
+      imagesizes="(max-width: 980px) 92vw, 560px" />
+<link rel="preload" as="image" href="{{ url_for('static', filename='images/characters/team2.png') }}" />
+
+<style>
+  /* ==========================
+     NU x Cyberpunk Design System
+     (keeps backend routes/IDs intact)
+     ========================== */
+  :root{
+    --radius-2xl: 30px; --radius-xl: 22px; --radius-lg: 16px; --radius-md: 12px;
+    --shadow-1: 0 14px 34px hsl(231 64% 18%/.30), 0 6px 16px hsl(231 64% 10%/.25);
+    --shadow-2: 0 20px 48px hsl(231 64% 18%/.38), 0 10px 28px hsl(231 64% 10%/.22);
+    --ease-1: cubic-bezier(.2,.8,.2,1);
+  }
+  [data-theme="light"]{
+    --ink: hsl(233 28% 14%);
+    --muted: hsl(233 12% 40%);
+    /* NU Navy + Gold tuned for AA contrast */
+    --nu-navy-700: #1a2b57; --nu-navy-800:#0f1c3b; --nu-navy-900:#0a122e;
+    --nu-gold-500:#C89B27; --nu-gold-600:#B2871F; --nu-gold-700:#8F6C15;
+    --bg: hsl(220 40% 98%);
+    --surface: hsl(0 0% 100%/.9);
+    --panel: hsl(0 0% 100%/.88);
+    --ring: hsl(47 95% 56%/.45);
+    --glass: linear-gradient(180deg, hsl(0 0% 100%/.86), hsl(0 0% 100%/.78));
+    --border: 1px solid hsl(232 14% 12%/.08);
+    color-scheme: light;
+  }
+  [data-theme="dark"]{
+    --ink: hsl(231 22% 92%);
+    --muted: hsl(231 14% 72%);
+    --nu-navy-700:#0f1c3b; --nu-navy-800:#0b1631; --nu-navy-900:#070e24;
+    --nu-gold-500:#FFD86B; --nu-gold-600:#F5C94E; --nu-gold-700:#D9B23C;
+    --bg: var(--nu-navy-900);
+    --surface: hsl(231 60% 10%/.76);
+    --panel: hsl(231 60% 12%/.82);
+    --ring: hsl(47 98% 60%/.55);
+    --glass: linear-gradient(180deg, hsl(231 60% 12%/.82), hsl(231 60% 8%/.78));
+    --border: 1px solid hsl(0 0% 100%/.10);
+    color-scheme: dark;
+  }
+
+  *,*::before,*::after{box-sizing:border-box}
+  html:focus-within{scroll-behavior:smooth}
+  body{margin:0;min-height:100svh;background:var(--bg);color:var(--ink);
+       font:16px/1.6 Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+       text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+  h1,h2,h3{font-family:Poppins,Inter,system-ui,sans-serif;letter-spacing:.2px}
+  h1{font-weight:900;margin:0 0 .2em}
+  h2{font-weight:800;margin:0 0 .4em}
+  h3{font-weight:700;margin:0 0 .3em}
+  p{margin:.4em 0 1em}
+  a{color:inherit;text-decoration-thickness:2px;text-underline-offset:2px}
+
+  .container{width:min(1180px,92vw);margin-inline:auto}
+  .section{padding-block:clamp(28px,5vw,64px)}
+  .grid-2{display:grid;grid-template-columns:1.08fr 1fr;gap:clamp(16px,3vw,28px);align-items:start}
+  @media (max-width:980px){.grid-2{grid-template-columns:1fr}}
+
+  /* ===== Ambient Background Layers ===== */
+  .bg-campus{position:fixed;inset:0;z-index:-4;background:
+      radial-gradient(110vmax 70vmax at 10% 6%,hsl(220 80% 60%/.14),transparent 60%),
+      radial-gradient(90vmax 70vmax at 90% 10%,hsl(47 95% 60%/.18),transparent 50%),
+      url('{{ url_for("static", filename="images/bg/cc.png") }}') center/cover no-repeat fixed;
+      filter:saturate(108%)}
+  .bg-grid{position:fixed;inset:0;z-index:-3;pointer-events:none;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 38px, hsl(231 90% 60%/.08) 38px 39px),
+      repeating-linear-gradient(90deg, transparent 0 38px, hsl(47 95% 60%/.08) 38px 39px);
+    mask: linear-gradient(180deg, transparent, #000 15%, #000 85%, transparent);
+  }
+  .bg-vignette{position:fixed;inset:0;z-index:-2;pointer-events:none;
+    background:radial-gradient(100vmax 80vmax at 50% 40%,transparent 0%,transparent 62%,hsl(231 80% 6%/.68) 100%)}
+  .grain{position:fixed;inset:-50%;z-index:-1;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
+    background:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="140" height="140" viewBox="0 0 140 140"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2"/></filter><rect width="100%" height="100%" filter="url(%23n)" opacity=".5"/></svg>') repeat 0 0/220px 220px}
+
+  /* ===== A11y ===== */
+  .skip{position:absolute;left:12px;top:-46px;padding:10px 14px;border-radius:10px;background:var(--panel);
+        box-shadow:var(--shadow-1);border:var(--border);z-index:40;transition:top .18s var(--ease-1)}
+  .skip:focus{top:12px}
+  :focus-visible{outline:3px solid var(--ring);outline-offset:2px;border-radius:10px}
+
+  /* ===== Navbar ===== */
+  .nav{position:sticky;top:0;z-index:30;backdrop-filter:saturate(140%) blur(10px);background:var(--glass);border-bottom:var(--border);isolation:isolate}
+  .nav-in{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;padding:12px 0}
+  .brand{display:inline-flex;align-items:center;gap:12px;text-decoration:none}
+  .brand img{width:36px;height:36px;border-radius:10px;object-fit:cover;box-shadow:0 1px 2px hsl(0 0% 0%/.5) inset}
+  .brand-title{line-height:1.1}
+  .brand-title .a{font-weight:900;font-size:14px;letter-spacing:.4px}
+  .brand-title .b{font-weight:800;font-size:12px;color:var(--muted)}
+  .nav-actions{display:flex;align-items:center;gap:10px;justify-self:end;flex-wrap:wrap}
+
+  .switch{display:flex;align-items:center;gap:6px;border:var(--border);border-radius:12px;background:var(--surface);padding:6px 10px}
+  .switch button{background:none;border:0;padding:6px 10px;border-radius:8px;cursor:pointer;color:var(--muted)}
+  .switch button[aria-pressed="true"]{outline:2px solid var(--nu-gold-600);color:var(--ink)}
+  .switch svg{width:18px;height:18px}
+
+  /* ===== Buttons ===== */
+  .btn{--_start:var(--nu-gold-500);--_end:var(--nu-gold-700);--_text:#0d101c;--_ring:var(--ring);
+       display:inline-flex;align-items:center;gap:10px;text-decoration:none;border:0;padding:12px 16px;border-radius:var(--radius-lg);
+       font-weight:900;letter-spacing:.2px;background:linear-gradient(180deg,var(--_start),var(--_end));color:var(--_text);
+       box-shadow:0 8px 26px hsl(47 90% 50%/.28),0 3px 10px hsl(47 90% 30%/.18);position:relative;transform:translateY(0);
+       transition:transform .15s var(--ease-1), box-shadow .2s var(--ease-1);touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+  .btn:hover{transform:translateY(-1px);box-shadow:var(--shadow-2)}
+  .btn:active{transform:translateY(0)}
+  .btn:focus-visible{outline:0;box-shadow:0 0 0 4px var(--_ring),var(--shadow-2)}
+  .btn-outline{--_start:transparent;--_end:transparent;--_text:var(--ink);border:var(--border);box-shadow:none;background:var(--surface)}
+  .btn-ghost{background:transparent;border:var(--border);color:var(--ink);padding:10px 14px;border-radius:var(--radius-md)}
+
+  /* ===== Announcement Banner ===== */
+  .banner{border:var(--border);border-radius:16px;background:var(--surface);box-shadow:var(--shadow-1);padding:10px 12px;margin-block:12px;overflow:hidden;position:relative}
+  .banner-track{white-space:nowrap;display:inline-block;animation:ticker 26s linear infinite;pointer-events:none}
+  @keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  @media (prefers-reduced-motion: reduce){.banner-track{animation:none}}
+
+  /* ===== Hero ===== */
+  .hero{align-items:center}
+  .lead-panel{position:relative;background:var(--glass);border:var(--border);border-radius:var(--radius-2xl);padding:clamp(18px,2.4vw,28px);box-shadow:var(--shadow-1);backdrop-filter:blur(10px)}
+  .lead-panel::after{content:"";position:absolute;inset:-1px;border-radius:inherit;pointer-events:none;
+    background:conic-gradient(from 0deg at 50% 50%, transparent 0 10%, hsl(47 95% 60%/.22) 10% 20%, transparent 20% 30%, hsl(220 90% 60%/.16) 30% 40%, transparent 40% 100%);
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude; padding:1px;}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-weight:900;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;font-size:12px}
+  .hero h1{font-size:clamp(32px,5.2vw,56px);line-height:1.04}
+  .hero h1 strong{color:var(--nu-gold-500)}
+  .cta{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+  .hero-right{display:grid;gap:12px}
+  .reel{position:relative}
+  .reel-frame{position:relative;border-radius:var(--radius-2xl);overflow:clip;box-shadow:var(--shadow-1);border:var(--border);background:var(--surface);aspect-ratio:16/9}
+  .reel-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .6s var(--ease-1),transform 8s linear;transform:scale(1.04)}
+  .reel-img.active{opacity:1;transform:scale(1)}
+  @media (prefers-reduced-motion: reduce){.reel-img{transition:opacity .3s var(--ease-1);transform:none}.reel-img.active{transform:none}}
+  .reel-badge{position:absolute;left:12px;top:12px;display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;background:var(--surface);border:var(--border);box-shadow:var(--shadow-1);font-weight:900}
+  .reel-badge img{width:20px;height:20px;border-radius:50%;object-fit:cover}
+  .reel-caption{position:absolute;left:12px;bottom:12px;background:var(--surface);border:var(--border);box-shadow:var(--shadow-1);padding:8px 12px;border-radius:10px;font-weight:800}
+  .reel-leds{position:absolute;right:12px;bottom:12px;display:flex;gap:6px;pointer-events:none}
+  .led{width:8px;height:8px;border-radius:50%;background:hsl(0 0% 100%/.35);box-shadow:0 0 0 2px hsl(0 0% 0%/.15) inset}
+  .led.on{background:var(--nu-gold-600)}
+
+  .team-card{position:relative;border-radius:var(--radius-2xl);overflow:clip;box-shadow:var(--shadow-1);border:var(--border);background:var(--surface)}
+  .team-media{aspect-ratio:16/9;display:grid;place-items:center;background:hsl(231 60% 14%/.5)}
+  .team-media img{width:100%;height:100%;object-fit:cover}
+  .media-badge{position:absolute;left:12px;bottom:12px;background:hsl(231 60% 8%/.7);color:#fff;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:900;backdrop-filter:blur(4px);border:1px solid hsl(0 0% 100%/.12)}
+
+  /* ===== Finder / Chips / Stats ===== */
+  .chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+  .chip{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:var(--surface);border:var(--border);box-shadow:var(--shadow-1);font-weight:900;text-decoration:none}
+  .finder{margin-top:14px;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;background:var(--surface);border:var(--border);border-radius:var(--radius-lg);padding:10px;box-shadow:var(--shadow-1)}
+  .finder label{grid-column:1 / -1;font-size:12px;color:var(--muted)}
+  .finder input{width:100%;padding:12px;border-radius:12px;border:1px solid hsl(0 0% 50%/.18);background:transparent;color:var(--ink);font-weight:800}
+
+  .stats{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px}
+  .stat{min-width:140px;text-align:center;background:var(--surface);border:var(--border);border-radius:14px;padding:14px;box-shadow:var(--shadow-1)}
+  .stat .num{display:block;font-weight:900;font-size:24px;color:var(--nu-gold-500)}
+  .stat small{color:var(--muted)}
+
+  /* ===== Feature Cards ===== */
+  .features{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  @media (max-width:960px){.features{grid-template-columns:1fr}}
+  .card{position:relative;background:var(--surface);border:var(--border);border-radius:var(--radius-2xl);padding:20px;box-shadow:var(--shadow-1)}
+  .card::before,.card::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none}
+  .card::before{border:1px dashed hsl(47 95% 60%/.18);mask:linear-gradient(#000 0 0) subtract,linear-gradient(#000 0 0);}
+  .card::after{inset:auto 16px 12px 16px;height:2px;background:linear-gradient(90deg,transparent, var(--nu-gold-600), transparent)}
+  .card h3{display:flex;align-items:center;gap:8px;margin:0 0 6px;font-size:clamp(16px,2vw,18px)}
+  .card p{margin:6px 0 0;color:var(--muted)}
+  .icon{width:24px;height:24px;object-fit:contain}
+
+  /* ===== Programs Grid ===== */
+  .programs{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+  @media (max-width:1100px){.programs{grid-template-columns:repeat(3,1fr)}}
+  @media (max-width:560px){.programs{grid-template-columns:repeat(2,1fr)}}
+  .program{position:relative;text-decoration:none;text-align:center;background:var(--surface);border:var(--border);border-radius:16px;padding:16px 10px;box-shadow:var(--shadow-1);font-weight:900;color:var(--ink);transition:transform .16s var(--ease-1), box-shadow .2s var(--ease-1)}
+  .program:hover{transform:translateY(-3px);box-shadow:var(--shadow-2)}
+  .program img{width:42px;height:42px;object-fit:contain;display:block;margin:0 auto 6px}
+
+  /* ===== Timeline & Quotes ===== */
+  .timeline{position:relative;padding-top:6px}
+  .timeline::before{content:"";position:absolute;left:0;right:0;top:0;height:6px;border-radius:999px;background:linear-gradient(90deg,var(--nu-gold-600),transparent)}
+  .stepbar{display:flex;gap:14px;flex-wrap:wrap;align-items:center;justify-content:center;margin-top:12px}
+  .step{display:flex;align-items:center;gap:8px;background:var(--surface);border:var(--border);border-radius:999px;padding:10px 14px;box-shadow:var(--shadow-1);font-weight:900}
+  .step-badge{width:24px;height:24px;display:grid;place-items:center;background:var(--nu-gold-600);color:#111;border-radius:999px;font-weight:900;font-size:13px}
+  .slider{display:grid;grid-auto-flow:column;gap:12px;overflow:hidden;mask-image:linear-gradient(90deg,transparent 0,#000 6%,#000 94%,transparent 100%)}
+  .quote{min-width:280px;background:var(--surface);border:var(--border);border-radius:16px;padding:16px;box-shadow:var(--shadow-1)}
+  .quote strong{display:block;margin-bottom:6px}
+  .muted{color:var(--muted)}
+
+  /* ===== FAQ & Footer ===== */
+  .faq{display:grid;gap:10px}
+  details{background:var(--surface);border:var(--border);border-radius:14px;padding:12px 14px;box-shadow:var(--shadow-1)}
+  summary{cursor:pointer;font-weight:800}
+  footer{border-top:var(--border);background:var(--surface)}
+  .foot{display:grid;grid-template-columns:1.1fr .9fr .9fr;gap:16px;padding:18px 0;color:var(--muted)}
+  .foot h4{margin:0 0 8px;font-family:Poppins;font-weight:800;color:var(--ink)}
+  .foot a{text-decoration:none;color:inherit}
+  .foot ul{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+  @media (max-width:900px){.foot{grid-template-columns:1fr}}
+
+  /* ===== Reveal + Toast ===== */
+  .reveal{opacity:0;transform:translateY(10px);transition:opacity .5s var(--ease-1), transform .5s var(--ease-1)}
+  .reveal.in{opacity:1;transform:none}
+  .toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%) translateY(20px);background:#111;color:#fff;border-radius:12px;padding:10px 12px;box-shadow:0 10px 24px hsl(0 0% 0%/.4);font-weight:800;opacity:0;pointer-events:none;transition:opacity .2s var(--ease-1), transform .2s var(--ease-1);z-index:50}
+</style>
+
+<!-- theme-color meta for JS update -->
+<meta name="theme-color" content="#0a122e" id="metaTheme"/>
+
+<!-- Background layers -->
+<div class="bg-campus" aria-hidden="true"></div>
+<div class="bg-grid" aria-hidden="true"></div>
+<div class="bg-vignette" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+
+<a href="#main" class="skip">Skip to content</a>
+
+<header class="nav" role="banner">
+  <div class="container nav-in">
+    <!-- Brand → keep backend safe: link to Apply if no home route -->
+    <a class="brand" href="{{ url_for('view.apply') }}" aria-label="NU Lipa — NU Quest home">
+      <img src="{{ url_for('static', filename='images/logos/nu-lipa.png') }}" alt="NU Lipa crest" width="36" height="36" loading="eager" decoding="async">
+      <div class="brand-title"><div class="a">NU Lipa</div><div class="b">NU Quest</div></div>
+    </a>
+
+    <div></div>
+
+    <div class="nav-actions">
+      <!-- THEME SWITCH -->
+      <div class="switch" id="themeSwitch" role="group" aria-label="Theme">
+        <button type="button" data-mode="auto"  aria-pressed="true"  title="Auto">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v2M12 19v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M3 12h2M19 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
+        <button type="button" data-mode="light" aria-pressed="false" title="Light">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="5.2" stroke="currentColor" stroke-width="1.8"/><g stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 3v2M12 19v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M3 12h2M19 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></g></svg>
+        </button>
+        <button type="button" data-mode="dark"  aria-pressed="false" title="Dark">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 12.39A8 8 0 1 1 11.61 4 6 6 0 0 0 20 12.39Z" stroke="currentColor" stroke-width="1.8"/></svg>
+        </button>
+      </div>
+
+      <a class="btn btn-outline" href="#how" aria-label="How it works">How it works</a>
+
+      <!-- Explicit routes (kept the same backend) -->
+      <a class="btn" href="{{ url_for('view.apply') }}" aria-label="Start application">
+        <img style="width:20px;height:20px;border-radius:50%" src="{{ url_for('static', filename='images/characters/kat.png') }}" alt="" aria-hidden="true" loading="lazy" decoding="async">
+        Start Application
+      </a>
+      <a class="btn btn-outline" href="{{ url_for('auth.login') }}" aria-label="Admin login">
+        <img style="width:20px;height:20px;border-radius:50%" src="{{ url_for('static', filename='images/characters/marc.png') }}" alt="" aria-hidden="true" loading="lazy" decoding="async">
+        Admin
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- Announcements -->
+<div class="container" role="region" aria-label="Announcements">
+  <div class="banner" aria-live="polite">
+    <span class="banner-track">
+      Welcome to NU Quest! — Applications for AY 2025–2026 are now open — Scholarship info under Financial Aid — Campus tours every Fri 2PM — Watch your email for updates ✨ &nbsp;&nbsp;&nbsp;
+      Welcome to NU Quest! — Applications for AY 2025–2026 are now open — Scholarship info under Financial Aid — Campus tours every Fri 2PM — Watch your email for updates ✨
+    </span>
+  </div>
+</div>
+
+<!-- HERO -->
+<main id="main" class="container section grid-2 hero" role="main" aria-label="Welcome to NU Quest">
+  <section class="lead-panel reveal" aria-label="Intro">
+    <span class="eyebrow">Be a <strong style="color:var(--nu-gold-500)">Nationalian</strong></span>
+    <h1>Start your <strong>NU Quest</strong> application</h1>
+    <p class="lead" style="color:var(--muted);font-size:clamp(14px,1.5vw,18px)">A refined, modern experience—fast, friendly, and delightful on any device.</p>
+
+    <div class="cta" role="group" aria-label="Actions">
+      <a class="btn" href="{{ url_for('view.apply') }}">
+        <img style="width:20px;height:20px" src="{{ url_for('static', filename='images/icons/form.png') }}" alt="" aria-hidden="true">
+        Start Application
+      </a>
+      <a class="btn btn-outline" href="{{ url_for('auth.login') }}">
+        <img style="width:20px;height:20px" src="{{ url_for('static', filename='images/icons/privacy.png') }}" alt="" aria-hidden="true">
+        Admin Login
+      </a>
+    </div>
+
+    <!-- Finder -->
+    <form class="finder" role="search" aria-label="Program finder" onsubmit="return false;">
+      <label for="programSearch">Find a program fast</label>
+      <input id="programSearch" list="programs" placeholder="Type e.g. Accountancy, Nursing, CS…"/>
+      <button class="btn btn-outline" id="goProgram" type="button">Go</button>
+      <datalist id="programs">
+        <option value="Accountancy"></option>
+        <option value="Business Admin – Fin. Mgmt"></option>
+        <option value="Business Admin – Marketing"></option>
+        <option value="Tourism"></option>
+        <option value="Architecture"></option>
+        <option value="Civil Engineering"></option>
+        <option value="Computer Science"></option>
+        <option value="Information Technology (MWA)"></option>
+        <option value="Medical Technology"></option>
+        <option value="Nursing"></option>
+        <option value="Psychology"></option>
+      </datalist>
+    </form>
+
+    <!-- Stats -->
+    <div class="stats" aria-label="At a glance">
+      <div class="stat"><span class="num" data-count="12">0</span><small>Programs</small></div>
+      <div class="stat"><span class="num" data-count="5">0</span><small>Scholarship Types</small></div>
+      <div class="stat"><span class="num" data-count="3">0</span><small>Admission Terms</small></div>
+    </div>
+
+    <div class="chips" role="list">
+      <a class="chip" role="listitem" href="#tours">🎒 Campus Tours</a>
+      <a class="chip" role="listitem" href="#aid">🎓 Scholarships</a>
+      <a class="chip" role="listitem" href="#faq">❓ FAQs</a>
+    </div>
+  </section>
+
+  <aside class="hero-right reveal">
+    <!-- Reel -->
+    <div class="reel" role="region" aria-label="Inside NU Lipa">
+      <div class="reel-frame" id="reel">
+        <img class="reel-img active" src="{{ url_for('static', filename='images/campus/comlab.png') }}"    alt="Computer Laboratory" loading="eager" decoding="async" sizes="(max-width: 980px) 92vw, 560px">
+        <img class="reel-img"        src="{{ url_for('static', filename='images/campus/gym.png') }}"       alt="NU Gym" loading="lazy" decoding="async">
+        <img class="reel-img"        src="{{ url_for('static', filename='images/campus/hallway.png') }}"   alt="Campus Hallway" loading="lazy" decoding="async">
+        <img class="reel-img"        src="{{ url_for('static', filename='images/campus/registrar.png') }}" alt="Registrar" loading="lazy" decoding="async">
+        <img class="reel-img"        src="{{ url_for('static', filename='images/campus/classroom.png') }}" alt="Classroom" loading="lazy" decoding="async">
+        <div class="reel-badge"><img src="{{ url_for('static', filename='images/logos/bulldog.png') }}" alt=""> <span>Inside NU Lipa</span></div>
+        <div class="reel-caption" id="reelCaption">Computer Laboratory</div>
+        <div class="reel-leds" id="reelDots" aria-hidden="true">
+          <span class="led on"></span><span class="led"></span><span class="led"></span><span class="led"></span><span class="led"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Team photo -->
+    <div class="team-card" role="region" aria-label="Meet the Team">
+      <figure class="team-media">
+        <img src="{{ url_for('static', filename='images/characters/team2.png') }}" alt="NU Quest team photo" loading="lazy" decoding="async">
+      </figure>
+      <div class="media-badge">Meet the NU Quest Team ✨</div>
+    </div>
+  </aside>
+</main>
+
+<!-- Features -->
+<section class="container section">
+  <div class="features">
+    <article class="card reveal"><h3><img class="icon" src="{{ url_for('static', filename='images/icons/form.png') }}" alt="" aria-hidden="true"> Streamlined Application</h3><p>Only the fields you need. Clear labels, mobile-first, WCAG-conscious.</p></article>
+    <article class="card reveal"><h3><img class="icon" src="{{ url_for('static', filename='images/icons/help.png') }}" alt="" aria-hidden="true"> Guided Experience</h3><p>Progressive steps and tips so you always know what’s next.</p></article>
+    <article class="card reveal"><h3><img class="icon" src="{{ url_for('static', filename='images/icons/privacy.png') }}" alt="" aria-hidden="true"> Security & Privacy</h3><p>Your data is protected and handled with care. Review our policy.</p></article>
+  </div>
+</section>
+
+<!-- Programs -->
+<section class="container section" aria-label="Programs">
+  <div class="programs">
+    <a class="program reveal" href="{{ url_for('view.apply') }}?program=Accountancy"><img src="{{ url_for('static', filename='images/icons/book.png') }}" alt="">Accountancy</a>
+    <a class="program reveal" href="{{ url_for('view.apply') }}?program=Fin.%20Mgmt"><img src="{{ url_for('static', filename='images/icons/chart.png') }}" alt="">Fin. Mgmt</a>
+    <a class="program reveal" href="{{ url_for('view.apply') }}?program=Marketing"><img src="{{ url_for('static', filename='images/icons/megaphone.png') }}" alt="">Marketing</a>
+    <a class="program reveal" href="{{ url_for('view.apply') }}?program=Tourism"><img src="{{ url_for('static', filename='images/icons/plane.png') }}" alt="">Tourism</a>
+    <a class="program reveal" href="{{ url_for('view.apply') }}?program=Architecture"><img src="{{ url_for('static', filename='images/icons/arch.png') }}" alt="">Architecture</a>
+    <a class="program reveal" href="{{ url_for('view.apply') }}?program=Civil%20Engineering"><img src="{{ url_for('static', filename='images/icons/bridge.png') }}" alt="">Civil Engg</a>
+    <a class="program reveal" href="{{ url_for('view.apply') }}?program=Computer%20Science"><img src="{{ url_for('static', filename='images/icons/code.png') }}" alt="">Comp Sci</a>
+    <a class="program reveal" href="{{ url_for('view.apply') }}?program=IT%20(MWA)"><img src="{{ url_for('static', filename='images/icons/phone.png') }}" alt="">IT (MWA)</a>
+    <a class="program reveal" href="{{ url_for('view.apply') }}?program=Medical%20Technology"><img src="{{ url_for('static', filename='images/icons/flask.png') }}" alt="">Med Tech</a>
+    <a class="program reveal" href="{{ url_for('view.apply') }}?program=Nursing"><img src="{{ url_for('static', filename='images/icons/nurse.png') }}" alt="">Nursing</a>
+    <a class="program reveal" href="{{ url_for('view.apply') }}?program=Psychology"><img src="{{ url_for('static', filename='images/icons/brain.png') }}" alt="">Psychology</a>
+    <a class="program reveal" href="#"><img src="{{ url_for('static', filename='images/icons/star.png') }}" alt="">More…</a>
+  </div>
+</section>
+
+<!-- Timeline & Testimonials -->
+<section id="how" class="container section timeline" aria-label="How it works">
+  <div class="stepbar">
+    <div class="step reveal"><span class="step-badge">1</span> Fill the form</div>
+    <div class="step reveal"><span class="step-badge">2</span> Review &amp; submit</div>
+    <div class="step reveal"><span class="step-badge">3</span> Check email updates</div>
+    <div class="step reveal"><span class="step-badge">4</span> Log in (Admin only)</div>
+  </div>
+
+  <div class="section" style="padding-top:18px;padding-bottom:0">
+    <div class="slider" id="quotes">
+      <div class="quote"><strong>“Smoothest school application I’ve tried.”</strong><span class="muted">— Grade 12 applicant</span></div>
+      <div class="quote"><strong>“Looks amazing and it’s clear what to do next.”</strong><span class="muted">— Parent</span></div>
+      <div class="quote"><strong>“Fast on mobile. Love the colors.”</strong><span class="muted">— Transfer student</span></div>
+      <div class="quote"><strong>“Professional but fun. Great job!”</strong><span class="muted">— Alumni</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="container section" aria-label="FAQs">
+  <div class="faq">
+    <details class="reveal"><summary>When will I hear back after I submit?</summary><p>You’ll receive an email within 3–5 working days with next steps.</p></details>
+    <details class="reveal"><summary>Can I edit my application?</summary><p>Yes. Use the secure link sent to your email to update details before the deadline.</p></details>
+    <details class="reveal"><summary>Where can I learn about scholarships?</summary><p>Visit the Scholarships section for details and eligibility.</p></details>
+  </div>
+</section>
+
+<footer role="contentinfo">
+  <div class="container foot">
+    <div><h4>NU Quest</h4><p class="muted">©2025 National University — NU Lipa</p></div>
+    <div><h4>Explore</h4><ul><li><a href="#">About</a></li><li><a href="#">Terms</a></li><li><a href="#">Privacy</a></li></ul></div>
+    <div><h4>Get Help</h4><ul><li><a href="#faq">FAQs</a></li><li><a href="#tours">Contact</a></li><li><a href="#tours">Campus Tours</a></li></ul></div>
+  </div>
+</footer>
+
+<div id="thanksToast" class="toast" role="alert" aria-live="polite">✨ Application submitted — we’ll email you updates!</div>
+
+<noscript>
+  <div class="container" style="margin:12px auto 24px; padding:12px 16px; border-radius:12px; border:1px solid #ccc; background:#fff; color:#111">
+    JavaScript is disabled. You can still browse, but animations and theme switching are off.
+  </div>
+</noscript>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  // ---------- ROUTES (kept to your backend) ----------
+  const APPLY_URL = "{{ url_for('view.apply') }}";
+  const LOGIN_URL = "{{ url_for('auth.login') }}";
+
+  // ---------- Keyboard shortcuts (A = Apply, L = Login) ----------
+  addEventListener('keydown', (e) => {
+    const tag = (e.target?.tagName || '').toLowerCase();
+    if (tag === 'input' || tag === 'textarea') return;
+    const k = e.key.toLowerCase();
+    if (k === 'a') location.href = APPLY_URL;
+    if (k === 'l') location.href = LOGIN_URL;
+  });
+
+  // ---------- Program finder → /apply?program= ----------
+  (function(){
+    const input = document.getElementById('programSearch');
+    const goBtn = document.getElementById('goProgram');
+    const go = ()=> {
+      const v = (input?.value || '').trim();
+      const q = encodeURIComponent(v);
+      location.href = q ? `${APPLY_URL}?program=${q}` : APPLY_URL;
+    };
+    goBtn?.addEventListener('click', go);
+    input?.addEventListener('keydown', e=>{ if(e.key==='Enter') go(); });
+  })();
+
+  // ---------- Count-up stats ----------
+  (function(){
+    const nums = document.querySelectorAll('.stat .num');
+    const animate = el => {
+      const target = +el.dataset.count || 0;
+      const dur = 900, start = performance.now();
+      const step = t => {
+        const p = Math.min(1, (t - start) / dur);
+        el.textContent = Math.floor(target * (0.1 + 0.9 * p));
+        if (p < 1) requestAnimationFrame(step); else el.textContent = target;
+      };
+      requestAnimationFrame(step);
+    };
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { animate(e.target); io.unobserve(e.target); } });
+    }, { threshold: .6 });
+    nums.forEach(n => io.observe(n));
+  })();
+
+  // ---------- Reveal on scroll ----------
+  (function(){
+    const els = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: .2 });
+    els.forEach(el => io.observe(el));
+  })();
+
+  // ---------- Testimonials slider ----------
+  (function(){
+    const track = document.getElementById('quotes');
+    if(!track) return;
+    let x = 0, rafId = null, reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const step = () => {
+      x -= 0.5;
+      track.style.transform = `translateX(${x}px)`;
+      if (Math.abs(x) > track.scrollWidth / 2) x = 0;
+      rafId = requestAnimationFrame(step);
+    };
+    const start = () => { if (!reduced && !rafId) rafId = requestAnimationFrame(step); };
+    const stop  = () => { if (rafId) cancelAnimationFrame(rafId); rafId = null; };
+    reduced ? stop() : start();
+    document.addEventListener('visibilitychange', () => document.hidden ? stop() : start());
+  })();
+
+  // ---------- Reel (carousel) ----------
+  (function(){
+    const frame = document.getElementById('reel');
+    if(!frame) return;
+    const slides = Array.from(frame.querySelectorAll('.reel-img'));
+    const dotsWrap = document.getElementById('reelDots');
+    const captionEl = document.getElementById('reelCaption');
+    let i = 0, paused = false;
+
+    const setActive = (n)=>{
+      slides[i].classList.remove('active');
+      i = (n + slides.length) % slides.length;
+      slides[i].classList.add('active');
+      captionEl.textContent = slides[i].alt || '';
+      if (dotsWrap){
+        const dots = dotsWrap.querySelectorAll('.led');
+        dots.forEach((d,idx)=> d.classList.toggle('on', idx===i));
+      }
+    };
+
+    setInterval(()=>{ if(!paused) setActive(i+1); }, 3800);
+    frame.addEventListener('mouseenter', ()=> paused = true);
+    frame.addEventListener('mouseleave', ()=> paused = false);
+
+    frame.tabIndex = 0;
+    frame.addEventListener('keydown', (e)=>{
+      if(e.key==='ArrowRight') setActive(i+1);
+      if(e.key==='ArrowLeft')  setActive(i-1);
+    });
+
+    let sx = 0; let dx = 0;
+    frame.addEventListener('touchstart', e=>{ sx = e.touches[0].clientX; dx = 0; }, { passive:true });
+    frame.addEventListener('touchmove',  e=>{ dx = e.touches[0].clientX - sx; }, { passive:true });
+    frame.addEventListener('touchend',   ()=>{ if(Math.abs(dx) > 40){ setActive(i + (dx<0?1:-1)); } });
+    document.addEventListener('visibilitychange', ()=>{ paused = document.hidden; });
+  })();
+
+  // ---------- Toast (?submitted=1) ----------
+  (function(){
+    const p = new URLSearchParams(location.search);
+    if (p.get('submitted') === '1'){
+      const t = document.getElementById('thanksToast');
+      t.style.opacity = 1; t.style.transform = 'translateX(-50%) translateY(0)';
+      setTimeout(()=>{ t.style.opacity = 0; }, 2200);
+      p.delete('submitted'); const clean = location.pathname + (p.toString()?('?'+p.toString()):''); history.replaceState({}, '', clean);
+    }
+  })();
+
+  // ---------- THEME: Auto / Light / Dark ----------
+  (function(){
+    const root = document.body;
+    const metaTheme = document.getElementById('metaTheme');
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    const switcher = document.getElementById('themeSwitch');
+    const KEY = 'nu_theme_mode'; // 'auto' | 'light' | 'dark'
+
+    const prefersDark = () => mq.matches;
+
+    function apply(mode){
+      const finalMode = mode === 'auto' ? (prefersDark() ? 'dark' : 'light') : mode;
+      root.setAttribute('data-theme', finalMode);
+      document.documentElement.style.colorScheme = finalMode;
+      metaTheme?.setAttribute('content', finalMode === 'dark' ? '#0a122e' : '#ffffff');
+      switcher.querySelectorAll('button[data-mode]').forEach(btn=>{
+        btn.setAttribute('aria-pressed', String(btn.dataset.mode === mode));
+      });
+    }
+
+    function setMode(mode){ localStorage.setItem(KEY, mode); apply(mode); }
+
+    const saved = ['auto','light','dark'].includes(localStorage.getItem(KEY)) ? localStorage.getItem(KEY) : 'auto';
+    apply(saved);
+
+    mq.addEventListener?.('change', ()=> { if ((localStorage.getItem(KEY) || 'auto') === 'auto') apply('auto'); });
+    switcher.addEventListener('click', (e)=>{
+      const btn = e.target.closest('button[data-mode]');
+      if(!btn) return; e.preventDefault(); e.stopPropagation(); setMode(btn.dataset.mode);
+    });
+  })();
+
+  // ---------- Parallax background ----------
+  (function(){
+    const bg = document.querySelector('.bg-campus'); if(!bg) return;
+    const onScroll = () => { const y = Math.round(window.scrollY * 0.2); bg.style.backgroundPosition = `center ${-y}px`; };
+    addEventListener('scroll', onScroll, { passive: true }); onScroll();
+  })();
+</script>
+{% endblock %}

@@ -1,0 +1,491 @@
+
+{% block content %}
+{# Safe home link fallback #}
+{% set _home = home_url or url_for('view.index') %}
+
+{# Load your JS that wires the form & options #}
+<script defer src="{{ url_for('static', filename='app.js') }}"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Poppins:wght@700;800;900&display=swap" rel="stylesheet"/>
+
+<style>
+  /* --- Fix hero carousel image sizing & stacking --- */
+.hero .media { max-height: clamp(220px, 30vw, 380px); }
+.hero .media-frame {
+  height: clamp(220px, 30vw, 380px); /* overrides aspect-ratio when needed */
+  aspect-ratio: auto;                /* prevent extreme tallness on mobile */
+  overflow: hidden;                  /* crop */
+}
+.hero .media img.slide {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;                 /* fill frame without stretching */
+}
+/* Defensive: only show the active slide even if another rule fails */
+.hero .media img.slide { display: none; }
+.hero .media img.slide.active { display: block; }
+
+/* (optional) tighten at very small screens */
+@media (max-width: 520px) {
+  .hero .media,
+  .hero .media-frame { height: 220px; }
+}
+
+  /* ======= Refined “Cohesive Cyber Pro” look (accessible, sleek) ======= */
+  :root{--radius-xl:28px;--radius-lg:22px;--radius-md:16px;--radius-sm:12px;
+        --shadow-1:0 12px 28px hsl(231 64% 18%/.30),0 4px 10px hsl(231 64% 10%/.35);
+        --shadow-2:0 18px 42px hsl(231 64% 18%/.35),0 6px 18px hsl(231 64% 10%/.20);
+        --ease-1:cubic-bezier(.2,.8,.2,1)}
+  [data-theme="light"]{
+    --ink:hsl(233 28% 14%);--muted:hsl(233 12% 40%);
+    --gold-500:#C89B27;--gold-600:#B2871F;--gold-700:#8F6C15;
+    --bg:hsl(220 40% 98%);--surface:hsl(0 0% 100%/.92);--panel:hsl(0 0% 100%/.90);
+    --ring:hsl(46 94% 50%/.40);--border:1px solid hsl(232 10% 10%/.08);
+    --glass:linear-gradient(180deg,hsl(0 0% 100%/.88),hsl(0 0% 100%/.78));
+    --hero-ink:var(--ink);--placeholder:hsl(232 12% 55%);color-scheme:light}
+  [data-theme="dark"]{
+    --ink:hsl(231 22% 92%);--muted:hsl(231 14% 72%);
+    --gold-500:#FFD86B;--gold-600:#F5C94E;--gold-700:#D9B23C;
+    --bg:hsl(231 66% 6%);--surface:hsl(231 60% 10%/.72);--panel:hsl(231 60% 12%/.82);
+    --ring:hsl(47 98% 60%/.55);--border:1px solid hsl(0 0% 100%/.08);
+    --glass:linear-gradient(180deg,hsl(231 60% 12%/.78),hsl(231 60% 10%/.72));
+    --hero-ink:#EAF2FF;--placeholder:hsl(231 14% 70%);color-scheme:dark}
+
+  *,*::before,*::after{box-sizing:border-box}
+  html:focus-within{scroll-behavior:smooth}
+  body{margin:0;min-height:100svh;background:var(--bg);color:var(--ink);
+       font:16px/1.6 Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+       -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+  h1,h2,h3{font-family:Poppins,Inter,system-ui,sans-serif;letter-spacing:.2px}
+  h1{font-weight:900;margin:0 0 .2em}
+  h2{font-weight:800;margin:0 0 .4em}
+  h3{font-weight:700;margin:0 0 .3em}
+  p{margin:.4em 0 1em}
+  a{color:inherit;text-decoration-thickness:2px;text-underline-offset:2px}
+  :focus-visible{outline:3px solid var(--ring);outline-offset:2px;border-radius:10px}
+
+  .container{width:min(1160px,92vw);margin-inline:auto}
+  .section{padding-block:clamp(24px,4.6vw,56px)}
+
+  .bg-campus{position:fixed;inset:0;z-index:-3;background:
+      radial-gradient(110vmax 70vmax at 10% 6%,hsl(220 80% 60%/.14),transparent 60%),
+      radial-gradient(90vmax 70vmax at 90% 10%,hsl(47 95% 60%/.18),transparent 50%),
+      url('{{ url_for("static", filename="images/bg/cc.png") }}') center/cover no-repeat fixed}
+  .bg-vignette{position:fixed;inset:0;z-index:-2;pointer-events:none;background:
+      radial-gradient(100vmax 80vmax at 50% 40%,transparent 0%,transparent 62%,hsl(231 80% 6%/.65) 100%)}
+  .grain{position:fixed;inset:-50%;z-index:-1;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
+         background:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="140" height="140" viewBox="0 0 140 140"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2"/></filter><rect width="100%" height="100%" filter="url(%23n)" opacity=".5"/></svg>') repeat 0 0/220px 220px}
+
+  .nav{position:sticky;top:0;z-index:30;backdrop-filter:saturate(140%) blur(10px);background:var(--glass);border-bottom:var(--border)}
+  .nav-in{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;padding:12px 0}
+  .brand{display:inline-flex;align-items:center;gap:12px;text-decoration:none}
+  .brand img{width:36px;height:36px;border-radius:10px;object-fit:cover}
+  .brand-title{line-height:1.1}
+  .brand-title .a{font-weight:900;font-size:14px}
+  .brand-title .b{font-weight:800;font-size:12px;color:var(--muted)}
+  .nav-actions{display:flex;align-items:center;gap:10px;justify-self:end;flex-wrap:wrap}
+  .switch{display:flex;align-items:center;gap:6px;border:var(--border);border-radius:12px;background:var(--surface);padding:6px 10px}
+  .switch button{background:none;border:0;padding:6px 10px;border-radius:8px;cursor:pointer;color:var(--muted)}
+  .switch button[aria-pressed="true"]{outline:2px solid var(--gold-600);color:var(--ink)}
+  .switch svg{width:18px;height:18px}
+
+  .btn{--_start:var(--gold-500);--_end:var(--gold-700);--_text:#141826;--_ring:var(--ring);
+       display:inline-flex;align-items:center;gap:10px;text-decoration:none;border:0;padding:12px 16px;border-radius:var(--radius-md);
+       font-weight:900;letter-spacing:.2px;background:linear-gradient(180deg,var(--_start),var(--_end));color:var(--_text);
+       box-shadow:0 6px 22px hsl(47 90% 50%/.25),0 2px 8px hsl(47 90% 30%/.15);transition:transform .15s var(--ease-1),box-shadow .2s var(--ease-1)}
+  .btn:hover{transform:translateY(-1px);box-shadow:var(--shadow-2)}
+  .btn:focus-visible{outline:0;box-shadow:0 0 0 4px var(--ring),var(--shadow-2)}
+  .btn-outline{background:var(--surface);border:var(--border);color:var(--ink);box-shadow:none}
+
+  .hero{border-radius:var(--radius-lg);border:var(--border);box-shadow:var(--shadow-1);overflow:hidden;position:relative}
+  .hero::before{content:"";position:absolute;inset:0;z-index:0;background:linear-gradient(180deg, rgba(6,31,73,.55), rgba(6,31,73,.28) 40%, rgba(6,31,73,.10) 70%)}
+  .hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:1.25fr 1fr;gap:18px;padding:clamp(16px,3vw,26px)}
+  @media (max-width:960px){.hero-grid{grid-template-columns:1fr}}
+
+  .glass{border-radius:18px;background:var(--panel);backdrop-filter:blur(12px) saturate(1.08);
+         border:var(--border);box-shadow:var(--shadow-1);padding:clamp(16px,2.6vw,22px)}
+  .eyebrow,.title,.lead{color:var(--hero-ink)}
+  .title{font-size:clamp(26px,4.8vw,44px);margin:6px 0;text-shadow:0 1px 0 rgba(0,0,0,.15)}
+
+  .steps{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  .pill{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:var(--surface);border:var(--border);font-weight:900}
+  .progress{height:8px;border-radius:999px;background:hsl(231 60% 18%/.25);margin-top:12px;overflow:hidden;border:var(--border)}
+  .progress .bar{height:100%;width:0;background:linear-gradient(90deg,var(--gold-600),hsl(219 84% 65%));transition:width .25s var(--ease-1)}
+
+  .card{background:var(--surface);border:var(--border);border-radius:var(--radius-md);box-shadow:var(--shadow-1);padding:18px}
+  .grid{display:grid;gap:12px}
+  .cols-2{grid-template-columns:1fr 1fr}
+  .cols-3{grid-template-columns:repeat(3,1fr)}
+  @media (max-width:960px){.cols-2,.cols-3{grid-template-columns:1fr}}
+
+  label{font-weight:850;display:block;margin:6px 0}
+  .req::after{content:" *";color:var(--gold-600)}
+  input,select,textarea{width:100%;height:44px;border:1px solid hsl(0 0% 50%/.18);border-radius:12px;padding:0 12px;background:transparent;color:var(--ink);
+                        outline:none;transition:box-shadow .12s var(--ease-1), background .12s var(--ease-1), border-color .12s var(--ease-1)}
+  textarea{height:auto;padding:10px 12px;min-height:96px;resize:vertical}
+  input:focus,select:focus,textarea:focus{box-shadow:0 0 0 3px var(--ring)}
+  input::placeholder{color:var(--placeholder)}
+  .hint{font-size:13px;color:var(--muted)}
+  .invalid{border-color:hsl(4 82% 60%/.9)!important;box-shadow:0 0 0 3px hsl(4 82% 60%/.35)!important}
+
+  .toast{position:fixed;right:16px;bottom:16px;z-index:50;display:flex;gap:10px;align-items:center;
+         padding:12px 14px;border-radius:14px;background:var(--surface);border:var(--border);box-shadow:var(--shadow-2);
+         transform:translateY(18px);opacity:0;pointer-events:none;transition:transform .25s var(--ease-1),opacity .25s var(--ease-1)}
+  .toast img{width:22px;height:22px;border-radius:50%}
+  .toast .t-title{font-weight:900}
+  .toast .t-desc{font-size:13px;color:var(--muted)}
+  .toast.show{transform:none;opacity:1;pointer-events:auto}
+</style>
+
+<meta name="theme-color" content="#0a122e" id="metaTheme"/>
+
+<div class="bg-campus" aria-hidden="true"></div>
+<div class="bg-vignette" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav" role="banner">
+  <div class="container nav-in">
+    <a class="brand" href="{{ _home }}" aria-label="NU Quest home">
+      <img src="{{ url_for('static', filename='images/logos/nu-lipa.png') }}" alt="NU Lipa crest">
+      <div class="brand-title"><div class="a">NU Lipa</div><div class="b">NU Quest</div></div>
+    </a>
+    <div></div>
+    <div class="nav-actions">
+      <div class="switch" id="themeSwitch" role="group" aria-label="Theme">
+        <button type="button" data-mode="auto"  aria-pressed="true"  title="Auto">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v2M12 19v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M3 12h2M19 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
+        <button type="button" data-mode="light" aria-pressed="false" title="Light">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="5.2" stroke="currentColor" stroke-width="1.8"/><g stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 3v2M12 19v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M3 12h2M19 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></g></svg>
+        </button>
+        <button type="button" data-mode="dark"  aria-pressed="false" title="Dark">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 12.39A8 8 0 1 1 11.61 4 6 6 0 0 0 20 12.39Z" stroke="currentColor" stroke-width="1.8"/></svg>
+        </button>
+      </div>
+      <a class="btn btn-outline" href="{{ _home }}">Back</a>
+      <a class="btn" href="{{ url_for('auth.login') }}">Admin</a>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="container section hero">
+  <div class="hero-grid">
+    <article class="glass reveal">
+      <span class="eyebrow">Be a <strong>Nationalian</strong></span>
+      <h1 class="title">NU Quest — <strong>Online Application</strong></h1>
+      <p class="lead">Complete the steps below. Fields marked with <strong>*</strong> are required.</p>
+      <div class="steps" aria-label="Form steps">
+        <span class="pill">1) Term</span>
+        <span class="pill">2) Programs</span>
+        <span class="pill">3) Personal & Address</span>
+        <span class="pill">4) Privacy & Submit</span>
+      </div>
+      <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Form completion">
+        <div class="bar" id="progressBar"></div>
+      </div>
+    </article>
+
+    <aside class="glass reveal">
+      <div class="media" id="heroMedia" role="region" aria-label="Campus highlight">
+        <div class="media-frame">
+          <img class="slide active" src="{{ url_for('static', filename='images/campus/comlab.png') }}"    alt="Computer Laboratory">
+          <img class="slide"        src="{{ url_for('static', filename='images/campus/gym.png') }}"       alt="NU Gym">
+          <img class="slide"        src="{{ url_for('static', filename='images/campus/hallway.png') }}"   alt="Campus Hallway">
+          <img class="slide"        src="{{ url_for('static', filename='images/campus/registrar.png') }}" alt="Registrar">
+          <img class="slide"        src="{{ url_for('static', filename='images/campus/classroom.png') }}" alt="Classroom">
+        </div>
+        <div class="media-scan" aria-hidden="true"></div>
+        <div class="badge"><img src="{{ url_for('static', filename='images/logos/bulldog.png') }}" alt="">Inside NU Lipa</div>
+        <div class="caption" id="heroCaption">Computer Laboratory</div>
+        <div class="dots" id="heroDots" aria-hidden="true">
+          <span class="dot on"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        </div>
+      </div>
+      <p class="hint" style="margin-top:10px">Tip: Use program chips on the homepage to prefill choices here.</p>
+      <div class="hint">Need help? Email <a href="mailto:admissions@nu-lipa.edu.ph" style="text-decoration:underline">admissions@nu-lipa.edu.ph</a></div>
+    </aside>
+  </div>
+</section>
+
+<!-- ===== FORM ===== -->
+<section class="container section">
+  {# IMPORTANT: action points to the correct POST endpoint; JS will still send JSON #}
+  <form id="applyForm" action="{{ url_for('api_predict') }}" method="post" class="grid" novalidate>
+    <!-- 1: Term -->
+    <section class="card reveal" aria-labelledby="termTitle">
+      <h2 id="termTitle" style="margin:0 0 8px">Application Term</h2>
+      <div class="grid cols-2">
+        <div>
+          <label class="req" for="campus">Campus</label>
+          <select id="campus" name="campus" autocomplete="organization" required>
+            <option value="" disabled selected>— Select —</option>
+            <option value="NU Lipa" selected>NU Lipa</option>
+          </select>
+        </div>
+        <div>
+          <label class="req" for="schoolYear">Academic Year</label>
+          <select id="schoolYear" name="school_year" required>
+            <option value="" disabled selected>— Select —</option>
+            <option>2024 - 2025</option>
+            <option selected>2025 - 2026</option>
+            <option>2026 - 2027</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid cols-2">
+        <div>
+          <label class="req" for="term">Academic Term</label>
+          <select id="term" name="term" required>
+            <option value="" disabled selected>— Select —</option>
+            <option>1st</option><option>2nd</option><option>3rd</option><option>Summer</option>
+          </select>
+        </div>
+        <div>
+          <label class="req" for="applyingFor">Applying For</label>
+          <select id="applyingFor" name="applying_for" required>
+            <option value="" disabled selected>— Select —</option>
+            <option>Freshman</option><option>Transferee</option><option>Second Degree</option><option>Cross Enrollee</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2: Programs -->
+    <section class="card reveal" aria-labelledby="progTitle">
+      <h2 id="progTitle" style="margin:0 0 8px">Program Choices</h2>
+      <div class="grid cols-2">
+        <div>
+          <label class="req" for="firstProgram">Program (1st)</label>
+          <select id="firstProgram" name="program1" required></select>
+        </div>
+        <div>
+          <label for="secondProgram">Program (2nd)</label>
+          <select id="secondProgram" name="program2"></select>
+        </div>
+      </div>
+      <p class="hint">Choose from curated programs — no typing needed.</p>
+    </section>
+
+    <!-- 3: Personal -->
+    <section class="card reveal" aria-labelledby="personTitle">
+      <h2 id="personTitle" style="margin:0 0 8px">Personal Information</h2>
+      <div class="grid cols-3">
+        <div>
+          <label class="req" for="first_name">First name</label>
+          <input id="first_name" name="first_name" autocomplete="given-name" required />
+        </div>
+        <div>
+          <label for="middle_name">Middle name</label>
+          <input id="middle_name" name="middle_name" autocomplete="additional-name"/>
+        </div>
+        <div>
+          <label class="req" for="last_name">Last name</label>
+          <input id="last_name" name="last_name" autocomplete="family-name" required />
+        </div>
+      </div>
+
+      <div class="grid cols-3">
+        <div>
+          <label class="req" for="age">Age</label>
+          <input id="age" name="age" type="number" min="15" max="80" inputmode="numeric" required />
+        </div>
+        <div>
+          <label class="req" for="studentType">Student Type</label>
+          <select id="studentType" name="student_type" required></select>
+        </div>
+        <div>
+          <label for="sex">Sex</label>
+          <select id="sex" name="sex">
+            <option value="" disabled selected>— Select —</option>
+            <option>Male</option><option>Female</option><option>Prefer not to say</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="grid cols-3">
+        <div>
+          <label class="req" for="dob">Date of Birth</label>
+          <input id="dob" name="dob" type="date" required/>
+        </div>
+        <div>
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" autocomplete="email" placeholder="name@example.com"/>
+        </div>
+        <div>
+          <label for="mobile">Mobile No.</label>
+          <input id="mobile" name="mobile" autocomplete="tel-national" placeholder="09XXXXXXXXX"/>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4: Current Address -->
+    <section class="card reveal" aria-labelledby="addrTitle">
+      <h2 id="addrTitle" style="margin:0 0 8px">Current Address</h2>
+      <div class="grid cols-3">
+        <div>
+          <label class="req" for="currRegion">Region</label>
+          <select id="currRegion" name="region" required></select>
+        </div>
+        <div>
+          <label class="req" for="currProvince">Province</label>
+          <select id="currProvince" name="province" disabled required></select>
+        </div>
+        <div>
+          <label class="req" for="currCity">City/Municipality</label>
+          <select id="currCity" name="city" disabled required></select>
+        </div>
+        <div>
+          <label for="currBarangay">Barangay</label>
+          <select id="currBarangay" name="barangay" disabled></select>
+        </div>
+        <div>
+          <label for="postal">Postal Code</label>
+          <input id="postal" name="postal" inputmode="numeric" autocomplete="postal-code"/>
+        </div>
+      </div>
+
+      <label style="display:flex;gap:8px;align-items:center;margin-top:10px">
+        <input type="checkbox" id="sameAsCurrent" name="same_current" style="width:auto">
+        <span>Permanent address is the same as current</span>
+      </label>
+    </section>
+
+    <!-- 5: Permanent Address -->
+    <section id="permSection" class="card reveal" aria-labelledby="permTitle">
+      <h2 id="permTitle" style="margin:0 0 8px">Permanent Address</h2>
+      <div class="grid cols-3">
+        <div>
+          <label class="req" for="perCountry">Country</label>
+          <select id="perCountry" name="per_country" required></select>
+        </div>
+        <div>
+          <label class="req" for="perRegion">Region</label>
+          <select id="perRegion" name="per_region" required></select>
+        </div>
+        <div>
+          <label class="req" for="perProvince">Province</label>
+          <select id="perProvince" name="per_province" disabled required></select>
+        </div>
+        <div>
+          <label class="req" for="perCity">City/Municipality</label>
+          <select id="perCity" name="per_city" disabled required></select>
+        </div>
+        <div>
+          <label for="perBarangay">Barangay</label>
+          <select id="perBarangay" name="per_barangay" disabled></select>
+        </div>
+        <div>
+          <label for="per_postal">Postal Code</label>
+          <input id="per_postal" name="per_postal" inputmode="numeric"/>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6: Background -->
+    <section class="card reveal" aria-labelledby="bgTitle">
+      <h2 id="bgTitle" style="margin:0 0 8px">Background</h2>
+      <div class="grid cols-3">
+        <div><label for="nationality">Nationality</label><select id="nationality" name="nationality"><option>Filipino</option><option>Dual Citizen</option><option>Other</option></select></div>
+        <div><label for="religion">Religion</label><input id="religion" name="religion"/></div>
+        <div><label for="civil_status">Civil Status</label><select id="civil_status" name="civil_status"><option>Single</option><option>Married</option><option>Other</option></select></div>
+      </div>
+      <div class="grid cols-2">
+        <div><label class="req" for="last_school_attended">Last School Attended</label><input id="last_school_attended" name="last_school_attended" placeholder="e.g., NU Lipa SHS" required></div>
+        <div><label class="req" for="schoolType">School Type</label><select id="schoolType" name="school_type" required></select></div>
+      </div>
+    </section>
+
+    <!-- 7: Privacy + submit -->
+    <section class="card reveal" aria-labelledby="privacyTitle">
+      <h2 id="privacyTitle" style="margin:0 0 8px">Data Privacy Agreement</h2>
+      <label style="display:flex;gap:10px;align-items:flex-start;margin-top:6px">
+        <input id="agree" name="agree" type="checkbox" style="width:auto" required>
+        <span class="hint" style="font-size:13px">
+          By accomplishing this form, I authorize National University to retain, process, and use my personal data to communicate with me via permitted channels. I understand I can withdraw consent at any time.
+        </span>
+      </label>
+      <div class="actions" style="margin-top:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <button class="btn" id="submitBtn" type="submit" aria-label="Submit Application">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Submit Application</span>
+        </button>
+        <a class="btn btn-outline" href="{{ _home }}">Cancel</a>
+        <span class="hint" id="submitHint">You’ll receive a confirmation right away.</span>
+      </div>
+    </section>
+  </form>
+
+  {# Hidden node: app.js writes prediction text here; we keep it hidden #}
+  <div id="result" class="result" hidden aria-hidden="true"></div>
+
+  <div class="lite" style="margin-top:12px">
+    <div>NU Quest ©2025 • National University</div>
+    <div class="links">
+      <a href="{{ _home }}">Home</a> •
+      <a href="{{ url_for('auth.login') }}">Admin</a>
+    </div>
+  </div>
+</section>
+
+<!-- Success toast -->
+<div class="toast" id="successToast" role="alert" aria-live="assertive" aria-hidden="true">
+  <img src="{{ url_for('static', filename='images/logos/bulldog.png') }}" alt="">
+  <div>
+    <div class="t-title">Application submitted</div>
+    <div class="t-desc">Thank you! Redirecting…</div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  // Ensure only ONE hero slide is active (prevents tall stacks)
+(function(){
+  const slides = document.querySelectorAll('#heroMedia .slide');
+  if (!slides.length) return;
+  slides.forEach((img, i) => img.classList.toggle('active', i === 0));
+})();
+
+/* ============ Visual polish (reveal, theme, carousel) ============ */
+(function(){ const els=document.querySelectorAll('.reveal'); const io=new IntersectionObserver(es=>{ es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }); }, {threshold:.2}); els.forEach(el=>io.observe(el)); })();
+(function(){ const bg=document.querySelector('.bg-campus'); if(!bg) return; const onScroll=()=>{ const y=Math.round(window.scrollY*0.2); bg.style.backgroundPosition=`center ${-y}px`; }; addEventListener('scroll',onScroll,{passive:true}); onScroll(); })();
+(function(){ const root=document.body, meta=document.getElementById('metaTheme'), mq=matchMedia('(prefers-color-scheme: dark)'), sw=document.getElementById('themeSwitch'); const KEY='nu_theme'; const apply=(m)=>{ const final=m==='auto'?(mq.matches?'dark':'light'):m; root.setAttribute('data-theme',final); document.documentElement.style.colorScheme=final; meta?.setAttribute('content', final==='dark'?'#0a122e':'#ffffff'); sw?.querySelectorAll('button[data-mode]').forEach(b=>b.setAttribute('aria-pressed', String(b.dataset.mode===m))); }; const set=(m)=>{ localStorage.setItem(KEY,m); apply(m); }; apply(['auto','light','dark'].includes(localStorage.getItem(KEY))?localStorage.getItem(KEY):'auto'); mq.addEventListener?.('change', ()=>{ if((localStorage.getItem(KEY)||'auto')==='auto') apply('auto'); }); sw?.addEventListener('click', e=>{ const b=e.target.closest('button[data-mode]'); if(!b) return; e.preventDefault(); set(b.dataset.mode); }); })();
+(function(){ const wrap=document.getElementById('heroMedia'); if(!wrap) return; const slides=[...wrap.querySelectorAll('.slide')]; const dotsWrap=document.getElementById('heroDots'); const caption=document.getElementById('heroCaption'); const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches; let i=0,t=null,p=false; function setActive(n){ slides[i].classList.remove('active'); i=(n+slides.length)%slides.length; slides[i].classList.add('active'); if(caption) caption.textContent=slides[i].alt||''; if(dotsWrap){ const dots=dotsWrap.querySelectorAll('.dot'); dots.forEach((d,idx)=> d.classList.toggle('on', idx===i)); } } function start(){ if(t||reduced) return; t=setInterval(()=>{ if(!p) setActive(i+1); },3800);} function stop(){ if(t){clearInterval(t); t=null;} } wrap.addEventListener('mouseenter', ()=>p=true); wrap.addEventListener('mouseleave', ()=>p=false); document.addEventListener('visibilitychange', ()=> document.hidden?stop():start()); wrap.tabIndex=0; wrap.addEventListener('keydown', e=>{ if(e.key==='ArrowRight') setActive(i+1); if(e.key==='ArrowLeft') setActive(i-1); }); let sx=0,dx=0; wrap.addEventListener('touchstart', e=>{ sx=e.touches[0].clientX; dx=0; }, {passive:true}); wrap.addEventListener('touchmove', e=>{ dx=e.touches[0].clientX-sx; }, {passive:true}); wrap.addEventListener('touchend', ()=>{ if(Math.abs(dx)>40){ setActive(i+(dx<0?1:-1)); } }); reduced?stop():start(); })();
+
+/* ============ Current ↔ Permanent mirror (UI only) ============ */
+(function(){
+  const cb=document.getElementById('sameAsCurrent');
+  const perm=document.getElementById('permSection');
+  function sync(){ const on=cb.checked; perm.style.display=on?'none':''; }
+  cb?.addEventListener('change', sync); sync();
+})();
+
+/* ============ Progress bar (from required + enabled fields) ============ */
+(function(){
+  const form=document.getElementById('applyForm'), bar=document.getElementById('progressBar'), box=document.querySelector('.progress');
+  const calc=()=>{ const req=[...form.querySelectorAll('[required]')].filter(el=>!el.disabled); let hit=0; req.forEach(el=>{ const ok=(el.type==='checkbox')?el.checked:(el.value&&el.value.trim()!==''); if(ok) hit++; }); const pct=Math.round((hit/Math.max(req.length,1))*100); bar.style.width=pct+'%'; bar.title=pct+'% complete'; box?.setAttribute('aria-valuenow', String(pct)); };
+  addEventListener('input', calc); addEventListener('change', calc); document.addEventListener('DOMContentLoaded', calc);
+})();
+
+/* ============ Success bridge: hide predictions, show toast + redirect ============ */
+/* app.js writes a success message to #result after POST /api/predict. We watch for that,
+   show a toast, and then send the user home. */
+(function(){
+  const res=document.getElementById('result');
+  const toast=document.getElementById('successToast');
+  const HOME="{{ _home }}";
+  function showToast(msg){ if(!toast) return; if(msg) toast.querySelector('.t-desc').textContent=msg; toast.classList.add('show'); setTimeout(()=>{ location.href=HOME; }, 1400); }
+  if(res){
+    const obs=new MutationObserver(()=>{
+      const t=(res.textContent||'').toLowerCase();
+      // app.js writes "likelihood: XX% | confidence: YY%" on success
+      if(t.includes('likelihood')){ obs.disconnect(); showToast("Thank you! Redirecting…"); }
+    });
+    obs.observe(res,{childList:true,subtree:true,characterData:true});
+  }
+})();
+</script>
+{% endblock %}

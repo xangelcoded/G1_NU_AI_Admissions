@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en" class="h-full">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>NU Quest – Enrollment Intelligence</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+    <script defer src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body class="h-full theme">
+    <header class="navbar glass">
+      <div class="brand">
+        <img src="{{ url_for('static', filename='images/nu-logo.png') }}" alt="NU" class="logo"/>
+        <span class="title">NU Quest</span>
+      </div>
+      <nav class="navlinks">
+        <a href="{{ url_for('view.index') }}">Home</a>
+        <a href="{{ url_for('view.apply') }}">Apply</a>
+        <a href="{{ url_for('auth.login') }}">Admin Login</a>
+      </nav>
+    </header>
+    <main class="container">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-wrap">
+          {% for category, message in messages %}
+            <div class="flash {{ category }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+      {% endwith %}
+      {% block content %}{% endblock %}
+    </main>
+    <footer class="footer">
+      <div>© {{ 2025 }} National University – Lipa • Enrollment Intelligence</div>
+    </footer>
+  </body>
+</html>
