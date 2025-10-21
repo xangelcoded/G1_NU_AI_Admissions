@@ -3,8 +3,6 @@
 A **Flask** web app for school admissions that predicts a student’s likelihood to enroll or re-enroll using a stacked ML pipeline (Random Forest, Logistic Regression, XGBoost → Meta-model).  
 Large ML artifacts are **not committed** to Git; they’re fetched from **Google Drive** into `app/AIMODEL/` during setup.
 
-> GitHub recommends shipping a README that explains what the project does and how to run it — it helps reviewers and users quickly understand your repo. :contentReference[oaicite:0]{index=0}
-
 ---
 
 ## Table of Contents
@@ -79,28 +77,24 @@ G1_NU_AI_Admissions/
 ├─ .gitignore # ignore venv, .env, models, caches, etc.
 └─ README.md
 
-yaml
-Copy code
 
 ---
 
 ## Prerequisites
 
 - **Python 3.10+**  
-- **Git**  
-- (Optional) **Ollama** installed if you want LLM explanations
+- **Git**
 
 ---
 
 ## Quickstart
 
 ### 1) Clone
-```bash
-git clone https://github.com/<your-username>/<your-repo>.git
-cd <your-repo>
+
+git clone https://github.com/xangelcoded/G1_NU_AI_Admissions.git
+cd G1_NU_AI_Admissions
 2) Virtual environment
-bash
-Copy code
+
 # Windows (PowerShell)
 python -m venv .venv
 .venv\Scripts\Activate.ps1
@@ -109,23 +103,15 @@ python -m venv .venv
 python -m venv .venv
 source .venv/bin/activate
 3) Install dependencies
-bash
-Copy code
+
 pip install -r requirements.txt
-We pin scikit-learn to a compatible version because pickled models are not guaranteed to load across different scikit-learn versions; keep runtime == training version. 
-scikit-learn.org
-+1
+
 
 4) Configure environment
 Create your local config file:
-
-bash
-Copy code
 cp .env.example .env
 Open .env and set values:
 
-dotenv
-Copy code
 # Flask / DB
 SECRET_KEY=change-me
 DATABASE_URL=sqlite:///school.db
@@ -139,26 +125,21 @@ EMAIL_PASSWORD=your-16-digit-app-password
 # ML
 MODELS_DIR=app/AIMODEL
 
-# LLM (optional)
-OLLAMA_MODEL=gemma:1b
-python-dotenv reads key=value pairs from .env and sets them as environment variables at runtime. 
-PyPI
+
 
 5) Get the ML models (Google Drive)
 Option A — One-command download (recommended):
 
-bash
-Copy code
 pip install gdown
 mkdir -p app/AIMODEL
-gdown --folder "https://drive.google.com/drive/folders/1tWb2rTPgFtyRndK6hi2Rq4Px36sYHiLQ?usp=sharing" -O app/AIMODEL
+gdown --folder "https://drive.google.com/drive/folders/1X5nFcDVU13zL3IEAyV3XM2fI7p3wnNDe?usp=sharing" -O app/AIMODEL
 gdown supports recursive folder downloads from Google Drive and bypasses common warning prompts. 
-GitHub
-+1
+
 
 Option B — Manual:
 
 Open the Drive link in a browser
+Link: https://drive.google.com/drive/folders/1X5nFcDVU13zL3IEAyV3XM2fI7p3wnNDe?usp=sharing
 
 Download files and place them in app/AIMODEL/:
 
@@ -174,16 +155,8 @@ training_columns.pkl
 
 X_train_encoded.pkl (if required by your code)
 
-6) (Optional) Enable Ollama
-bash
-Copy code
-# Install Ollama (from its site) and pull a local model
-ollama pull gemma:1b
-Set OLLAMA_MODEL in .env to your preferred local model.
+6) Run the app
 
-7) Run the app
-bash
-Copy code
 python app.py
 The app starts at http://127.0.0.1:5000/ (or the host/port configured in your code).
 
@@ -251,8 +224,6 @@ Reproducibility & Model Compatibility
 Pin ML library versions used during training (e.g., scikit-learn, xgboost).
 
 Loading pickled scikit-learn models across different versions is not supported/reliable — keep runtime equal to the training version. 
-scikit-learn.org
-+1
 
 Troubleshooting
 Models not found / load error
@@ -273,34 +244,5 @@ Keep DEBUG=True for local HTTP; use HTTPS and stricter cookies in production.
 
 gdown --folder doesn’t fetch files
 
-Make sure the Drive folder sharing is set to “Anyone with the link can view,” then rerun the command. gdown supports folder downloads. 
-GitHub
-
-.env variables aren’t loading
-
-Confirm the file is named .env at the project root; python-dotenv reads key=value lines and exports them before your app initializes. 
-PyPI
-
-Development Tips
-Keep secrets in .env; never hardcode credentials. python-dotenv helps follow 12-factor practices. 
-PyPI
-
-Start your repo with a README and a solid .gitignore (use GitHub’s Python template). 
-GitHub Docs
-
-Add screenshots to a docs/ folder and reference them with Markdown if helpful.
-
-Security
-Never commit .env, database files, or model binaries.
-
-Prefer App Passwords + 2FA for Gmail SMTP. 
-Google Help
-
-License
-Add a license (MIT is common for student projects). It clarifies reuse for reviewers and classmates.
-
 Credits
 Project Team: Angel Malaluan, Marc Miranda, Ian Medina, Katrina Pasadilla, Kenneth Averion, Ameril Mampao
-
-javascript
-Copy code
