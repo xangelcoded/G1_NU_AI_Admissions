@@ -92,7 +92,9 @@ G1_NU_AI_Admissions/
 ### 1) Clone
 
 git clone https://github.com/xangelcoded/G1_NU_AI_Admissions.git
+
 cd G1_NU_AI_Admissions
+
 2) Virtual environment
 
 # Windows (PowerShell)
