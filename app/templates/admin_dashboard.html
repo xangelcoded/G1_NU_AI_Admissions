@@ -13,20 +13,20 @@
 
 <style>
 /* ==========================================================
-   NU • CYBER ADMIN (Futuristic Blue/Gold)
-   — Clean • Accessible • Fast • Backend-Compatible
-   (All endpoints & DOM IDs preserved)
+   NU • CYBER ADMIN 2.0 (Futuristic Blue/Gold)
+   — Cleaner top, clearer hierarchy, tabbed charts,
+     fixed-height canvases, borders, and a11y polish.
+   (All endpoints & DOM IDs preserved for backend compatibility)
    ========================================================== */
 
 /* ---------------- Design tokens ---------------- */
 :root{
-  /* Radii & motion */
-  --radius-xl:28px; --radius-lg:22px; --radius:16px; --radius-sm:12px;
+  --radius-xxl:32px; --radius-xl:24px; --radius-lg:18px; --radius:12px; --radius-sm:10px;
   --ease-1:cubic-bezier(.2,.8,.2,1);
 
   /* Shadows */
-  --shadow-1:0 12px 28px hsl(231 64% 18%/.28), 0 4px 10px hsl(231 64% 10%/.35);
-  --shadow-2:0 18px 42px hsl(231 64% 18%/.35), 0 6px 18px hsl(231 64% 10%/.22);
+  --shadow-1:0 10px 22px hsl(231 64% 18%/.25), 0 4px 10px hsl(231 64% 10%/.30);
+  --shadow-2:0 18px 42px hsl(231 64% 18%/.33), 0 6px 18px hsl(231 64% 10%/.22);
 
   /* NU colors */
   --nu-blue:#0b3b8c;           /* brand base */
@@ -39,27 +39,27 @@
   --ink:hsl(231 22% 92%);      /* main text */
   --muted:hsl(231 14% 72%);
   --bg:hsl(231 66% 6%);
-  --panel:hsl(231 60% 12%/.88);
+  --panel:hsl(231 60% 12%/.92);
+  --panel-2:hsl(231 60% 10%/.9);
   --surface:hsl(231 60% 10%/.78);
-  --glass:linear-gradient(180deg,hsl(231 60% 14%/.74),hsl(231 60% 10%/.72));
+  --glass:linear-gradient(180deg,hsl(231 60% 14%/.78),hsl(231 60% 10%/.72));
   --ring:hsl(47 98% 60%/.45);
-  --border:1px solid hsl(0 0% 100%/.12);
+  --border:1px solid hsl(0 0% 100%/.16);
+  --border-strong:1px solid hsl(0 0% 100%/.24);
 
   /* Chart palette */
   --c1:#22c55e; --c2:#34a3ff; --c3:#f5a524; --c4:#ff6b6b; --c5:#94a3b8;
   --c6:#0b5bd5; --c7:#d4af37; --c8:#4f46e5; --c9:#06b6d4; --c10:#f97316;
-
-  /* Background image path (replace with your asset if desired) */
-  --bg-image-url: url('/static/img/nu-cyber-grid.jpg');
 }
 
-/* Optional light theme variables */
+/* Optional light theme */
 [data-theme="light"]{
   --ink:hsl(233 28% 14%); --muted:hsl(233 12% 40%);
-  --bg:hsl(225 35% 96%); --surface:hsl(0 0% 100%/.95); --panel:hsl(0 0% 100%/.92);
+  --bg:hsl(225 35% 97%); --surface:hsl(0 0% 100%/.95); --panel:hsl(0 0% 100%/.98); --panel-2:#fff;
   --glass:linear-gradient(180deg,hsl(0 0% 100%/.88),hsl(0 0% 100%/.78));
   --ring:hsl(46 94% 50%/.30);
   --border:1px solid hsl(232 10% 10%/.10);
+  --border-strong:1px solid hsl(232 10% 10%/.18);
   color-scheme:light;
 }
 :root,[data-theme="dark"]{ color-scheme:dark }
@@ -72,119 +72,87 @@ body{
   margin:0; color:var(--ink);
   font:15px/1.55 Inter, system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans", Arial, sans-serif;
   -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
-
-  /* Futuristic layered background (no external libs) */
   background:
-    radial-gradient(120vmax 80vmax at 12% -10%, rgba(52,163,255,.20), transparent 60%),
+    radial-gradient(110vmax 70vmax at 12% -10%, rgba(52,163,255,.22), transparent 60%),
     radial-gradient(120vmax 70vmax at 90% 0%, rgba(255,216,107,.18), transparent 50%),
     linear-gradient(180deg, hsl(231 65% 7%), hsl(231 60% 6%));
 }
-
-/* Neon grid & soft noise overlays */
-body::before,
-body::after{
-  content:""; position:fixed; inset:0; pointer-events:none; z-index:-1;
-}
+/* Subtle cyber grid & glow */
+body::before, body::after{content:""; position:fixed; inset:0; pointer-events:none; z-index:-1;}
 body::before{
-  /* subtle cyber grid */
   background:
     repeating-linear-gradient(0deg, rgba(120,160,255,.08) 0 1px, transparent 1px 80px),
     repeating-linear-gradient(90deg, rgba(120,160,255,.08) 0 1px, transparent 1px 80px);
-  mask:radial-gradient(120vmax 80vmax at 50% 50%, rgba(255,255,255,.8) 0%, rgba(255,255,255,.25) 60%, transparent 82%);
+  mask:radial-gradient(110vmax 70vmax at 50% 50%, rgba(255,255,255,.7) 0%, rgba(255,255,255,.25) 60%, transparent 82%);
 }
 body::after{
-  /* faint vignette and glow */
   background:
     radial-gradient(60vmax 40vmax at 82% 10%, rgba(92,200,255,.12), transparent 60%),
     radial-gradient(90vmax 60vmax at 12% 96%, rgba(255,216,107,.10), transparent 70%);
 }
 
-/* Background image layer (easily switch image via --bg-image-url) */
-.bg-img{
-  position:fixed; inset:0; z-index:-2;
-  background-image: var(--bg-image-url);
-  background-size:cover; background-position:center;
-  opacity:.12; mix-blend-mode:screen;
-  filter:saturate(140%) contrast(110%) brightness(80%);
-}
-[data-theme="light"] .bg-img{
-  mix-blend-mode:multiply; opacity:.14;
-  filter:saturate(120%) contrast(105%) brightness(100%);
-}
-
-/* High-contrast mode (toggleable) */
-[data-contrast="high"]{
-  --panel:hsl(231 60% 10%/1);
-  --surface:hsl(231 60% 8%/1);
-  --muted:hsl(231 8% 84%);
-  --ring:hsl(47 100% 50%/.55);
-}
-[data-contrast="high"] .card::before{
-  background:linear-gradient(90deg, rgba(92,200,255,.55), rgba(255,216,107,.55));
-}
-
-/* Respect OS forced-colors */
-@media (forced-colors: active){
-  .bg-img{ display:none !important; } /* avoid low contrast image under forced colors */
-}
-
-/* Skip link for keyboard users */
-.skip-link{
-  position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden;
-}
+/* Skip link */
+.skip-link{position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden;}
 .skip-link:focus{
   position:fixed; left:14px; top:10px; width:auto; height:auto; padding:10px 12px; z-index:200;
-  background:var(--panel); border:var(--border); border-radius:10px; font-weight:800;
+  background:var(--panel); border:var(--border-strong); border-radius:10px; font-weight:800;
 }
 
-/* ---------------- Top Navigation ---------------- */
+/* ---------------- Top Navigation (decluttered) ---------------- */
 header.nav{
   position:sticky; top:0; z-index:100; padding:10px 14px;
-  background:var(--glass); border-bottom:var(--border);
+  background:var(--glass); border-bottom:var(--border-strong);
   backdrop-filter:saturate(140%) blur(10px);
-  display:flex; align-items:center; gap:10px;
 }
+.nav-inner{
+  max-width:1280px; margin:0 auto; display:grid; gap:10px;
+  grid-template-columns:1fr auto; align-items:center;
+}
+.brand-wrap{display:flex; align-items:center; gap:10px}
 .crest{
-  width:36px;height:36px;border-radius:12px; box-shadow:0 1px 2px hsl(0 0% 0%/.45) inset;
+  width:40px;height:40px;border-radius:14px;
   background:
     radial-gradient(55% 70% at 30% 30%, rgba(255,255,255,.75), transparent 60%),
     conic-gradient(from 210deg, #0b3b8c, #1a4fa1 60%, #0b3b8c);
+  border:1px solid rgba(255,255,255,.2);
+  box-shadow:0 1px 2px hsl(0 0% 0%/.45) inset;
 }
-.brand{font:800 15px/1 Poppins,Inter,sans-serif; letter-spacing:.25px}
-.nav .right{margin-left:auto; display:flex; gap:8px; align-items:center}
-.net-dot{width:10px;height:10px;border-radius:50%; background:#22c55e; box-shadow:0 0 0 3px hsl(140 70% 40%/.2)}
-
-/* Buttons */
+.brand{
+  display:flex; flex-direction:column;
+}
+.brand b{font:900 15px/1 Poppins,Inter,sans-serif; letter-spacing:.2px}
+.brand small{color:var(--muted); font-weight:800}
+.nav-actions{display:flex; gap:8px; align-items:center}
 .btn{
   display:inline-flex; align-items:center; gap:8px; cursor:pointer;
-  padding:10px 12px; border-radius:12px; font-weight:800; color:var(--ink);
-  background:var(--panel); border:var(--border); box-shadow:var(--shadow-1);
+  padding:9px 11px; border-radius:12px; font-weight:800; color:var(--ink);
+  background:var(--panel); border:var(--border-strong); box-shadow:var(--shadow-1);
   transition:transform .15s var(--ease-1), box-shadow .15s var(--ease-1);
 }
-.btn.icon{padding:8px 10px}
+.btn.icon{padding:8px 10px; line-height:1}
 .btn:hover{transform:translateY(-1px)}
 .btn:focus-visible{outline:0; box-shadow:0 0 0 4px var(--ring), var(--shadow-1)}
 .btn.primary{
   border:0;
   background: linear-gradient(180deg, var(--nu-gold), var(--nu-gold-2));
   color:hsl(231 60% 8%); font-weight:900;
-  box-shadow: 0 6px 22px rgba(255,216,107,.25),
-              0 2px 8px rgba(255,216,107,.15),
-              0 0 0 1px rgba(255,216,107,.28) inset;
+  box-shadow: 0 6px 22px rgba(255,216,107,.25), 0 2px 8px rgba(255,216,107,.15), 0 0 0 1px rgba(255,216,107,.28) inset;
 }
+.net-dot{width:10px;height:10px;border-radius:50%; background:#22c55e; box-shadow:0 0 0 3px hsl(140 70% 40%/.2)}
 
-/* ---------------- Sticky toolbar ---------------- */
+/* ---------------- Sub-toolbar (chips & view controls) ---------------- */
 .toolbar{
-  position:sticky; top:54px; z-index:90; border-bottom:var(--border);
-  background:var(--surface); backdrop-filter:blur(6px)
+  position:sticky; top:62px; z-index:90; border-bottom:var(--border);
+  background:var(--panel-2); backdrop-filter:blur(6px)
 }
 .toolbar .row{
-  max-width:1280px; margin:0 auto; padding:10px 14px;
-  display:flex; gap:8px; align-items:center; flex-wrap:wrap;
+  max-width:1280px; margin:0 auto; padding:8px 14px;
+  display:grid; gap:8px; grid-template-columns:1fr auto; align-items:center;
 }
+.chips{display:flex; gap:8px; flex-wrap:wrap}
 .chip{
-  padding:6px 10px; border-radius:999px; background:var(--panel);
-  border:var(--border); color:var(--muted); font-weight:800; font-size:12.5px;
+  padding:7px 10px; border-radius:999px; background:var(--panel);
+  border:var(--border); color:var(--muted); font-weight:900; font-size:12.5px;
   box-shadow:0 0 0 1px rgba(92,200,255,.14) inset;
 }
 .pill{
@@ -192,77 +160,78 @@ header.nav{
   background:rgba(255,216,107,.12); color:var(--nu-gold);
   border:1px solid rgba(255,216,107,.35); font-weight:900
 }
+.view-controls{display:flex; gap:6px; align-items:center; flex-wrap:wrap}
 
 /* ---------------- Shell ---------------- */
 .container{max-width:1280px; margin:18px auto; padding:0 14px}
-.page-head{display:flex; align-items:center; gap:12px; flex-wrap:wrap}
-.page-title{margin:8px 0; font:800 28px/1.1 Poppins,Inter,sans-serif; letter-spacing:.2px}
+.page-head{
+  display:grid; gap:10px; grid-template-columns:1fr auto; align-items:center;
+  margin-bottom:10px;
+}
+.page-title{margin:0; font:900 26px/1.15 Poppins,Inter,sans-serif; letter-spacing:.2px}
 
-/* ---------------- Grid (fixed) ---------------- */
+/* ---------------- Grid ---------------- */
 .grid-2,.grid-3,.grid-4{display:grid; gap:12px}
 .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
 .grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
 .grid-4{grid-template-columns:repeat(4,minmax(0,1fr))}
 @media (max-width:1100px){ .grid-4,.grid-3,.grid-2{grid-template-columns:1fr} }
 
-/* ---------------- Cards (neon border) ---------------- */
+/* ---------------- Cards ---------------- */
 .card{
   position:relative; overflow:hidden;
-  background:var(--panel); border-radius:var(--radius-lg);
-  border:var(--border); box-shadow:var(--shadow-1);
-  content-visibility:auto; contain-intrinsic-size: 440px 320px; /* perf */
+  background:var(--panel); border-radius:var(--radius-xl);
+  border:var(--border-strong); box-shadow:var(--shadow-1);
 }
-.card h3{display:flex; align-items:center; gap:8px; margin:0 0 6px; font:800 16px/1.2 Poppins,Inter,sans-serif}
-.muted{color:var(--muted)}
+.card h3{display:flex; align-items:center; gap:8px; margin:0; font:900 16px/1.2 Poppins,Inter,sans-serif}
+.card .card-head{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 14px; border-bottom:var(--border-strong);
+  background:linear-gradient(180deg, rgba(92,200,255,.06), transparent);
+}
+.card .card-body{ padding:14px; }
+
+/* Accent border */
 .card::before{
-  content:""; position:absolute; inset:-1px; border-radius:inherit; padding:1px;
+  content:""; position:absolute; inset:-1px; border-radius:inherit; padding:1px; pointer-events:none;
   background:linear-gradient(90deg, rgba(92,200,255,.35), rgba(255,216,107,.35));
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor; mask-composite:exclude; pointer-events:none;
+  -webkit-mask-composite:xor; mask-composite:exclude;
 }
-.card:hover{box-shadow:0 22px 42px rgba(11,59,140,.24), 0 8px 20px rgba(0,0,0,.25)}
 
-/* ---------------- Filters ---------------- */
+/* ---------------- Filters (collapsible) ---------------- */
+.filter-toggle{display:flex; align-items:center; gap:8px}
 .form-grid{display:grid; grid-template-columns:repeat(8,minmax(0,1fr)); gap:12px}
-label{font-weight:800; font-size:12px; color:var(--muted); display:flex; flex-direction:column; gap:6px}
+label{font-weight:900; font-size:12px; color:var(--muted); display:flex; flex-direction:column; gap:6px}
 input,select{
-  padding:10px 12px; border-radius:12px; border:1px solid hsl(0 0% 50%/.18);
-  background:transparent; color:var(--ink); font-weight:700
+  padding:10px 12px; border-radius:12px; border:1px solid hsl(0 0% 100%/.22);
+  background:rgba(255,255,255,.02); color:var(--ink); font-weight:800
 }
 input[type="range"]{padding:0; accent-color: var(--nu-gold)}
 input[type="range"]::-webkit-slider-thumb{
   appearance:none; width:18px; height:18px; border-radius:50%;
   background: radial-gradient(circle at 30% 30%, #fff 0 30%, var(--nu-gold) 31% 100%);
-  border:1px solid rgba(0,0,0,.35);
-  box-shadow: 0 0 0 3px rgba(255,216,107,.25);
+  border:1px solid rgba(0,0,0,.35); box-shadow: 0 0 0 3px rgba(255,216,107,.25);
 }
-input[type="range"]::-webkit-slider-runnable-track{
-  height:6px; border-radius:999px;
-  background:linear-gradient(90deg, var(--nu-neon), var(--nu-gold));
-}
-input[type="range"]::-moz-range-thumb{
-  width:18px; height:18px; border-radius:50%; background:var(--nu-gold); border:0;
-}
-input[type="range"]::-moz-range-track{
-  height:6px; border-radius:999px;
-  background:linear-gradient(90deg, var(--nu-neon), var(--nu-gold));
-}
+input[type="range"]::-webkit-slider-runnable-track{height:6px; border-radius:999px; background:linear-gradient(90deg, var(--nu-neon), var(--nu-gold));}
+input[type="range"]::-moz-range-thumb{ width:18px; height:18px; border-radius:50%; background:var(--nu-gold); border:0; }
+input[type="range"]::-moz-range-track{ height:6px; border-radius:999px; background:linear-gradient(90deg, var(--nu-neon), var(--nu-gold)); }
 
 /* ---------------- KPIs ---------------- */
 .kpi .kpi-num{font:900 clamp(22px,3vw,32px)/1 Poppins,Inter,sans-serif; color:var(--nu-gold)}
 .kpi .spark{height:28px; width:100%; display:block}
-.delta{font-size:12px; font-weight:900; padding:4px 8px; border-radius:999px; margin-left:6px}
+.delta{font-size:12px; font-weight:900; padding:4px 8px; border-radius:999px; margin-left:6px; border:var(--border)}
 .delta.up{background:rgba(34,197,94,.18); color:#22c55e}
 .delta.down{background:rgba(255,107,107,.18); color:#ff7d7d}
 
 /* ---------------- Queues ---------------- */
-.queue-list{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px}
+.queue-list{list-style:none; margin:0; padding:12px; display:flex; flex-direction:column; gap:8px}
 .queue-row{
   display:grid; gap:8px; align-items:center;
   grid-template-columns:110px 90px 90px 90px 1.3fr .9fr 1fr;
-  padding:10px 12px; border-radius:12px; background:var(--surface); border:var(--border)
+  padding:10px 12px; border-radius:12px; background:var(--surface); border:var(--border-strong)
 }
-.badge{display:inline-block; padding:4px 8px; border-radius:999px; font-weight:900; font-size:12px; color:#0c1022}
+.badge{display:inline-block; padding:4px 8px; border-radius:999px; font-weight:900; font-size:12px; color:#0c1022; border:1px solid rgba(255,255,255,.24)}
 .badge-vh{background:linear-gradient(90deg,#FFD86B,#5CC8FF)}
 .badge-h{ background:linear-gradient(90deg,#F9E06C,#6EA8FF)}
 .badge-m{ background:linear-gradient(90deg,#7DB9FF,#4C7DFF)}
@@ -270,23 +239,31 @@ input[type="range"]::-moz-range-track{
 .badge-vl{background:linear-gradient(90deg,#505050,#1f1f1f); color:#fff}
 
 /* ---------------- Charts ---------------- */
-.chart{
-  display:block; width:100%; height:320px; border-radius:14px;
-  background:var(--surface); border:var(--border); position:relative; overflow:hidden
-}
+.chart{ display:block; width:100%; height:320px; max-height:320px; border-radius:14px;
+  background:var(--surface); border:var(--border-strong); position:relative; overflow:hidden }
 .chart-tools{position:absolute; top:8px; right:8px; display:flex; gap:6px}
 .chart-tools .btn{padding:6px 8px; font-size:12px}
 canvas[data-chart]{display:block; width:100%; height:100%}
 .skeleton{position:relative; overflow:hidden; background:linear-gradient(90deg,#111b36 25%,#0f172a 50%,#111b36 75%); background-size:200% 100%; animation:shim 1s linear infinite}
 @keyframes shim{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
+/* ---------------- Tabbed charts ---------------- */
+.tabs{display:flex; gap:6px; flex-wrap:wrap; padding:8px 10px}
+.tab{padding:8px 10px; border-radius:999px; border:var(--border); background:var(--panel); font-weight:900; cursor:pointer}
+.tab[aria-selected="true"]{background:linear-gradient(90deg, rgba(92,200,255,.18), rgba(255,216,107,.18)); border-color:hsl(0 0% 100%/.28)}
+.tabpanels > section{display:none}
+.tabpanels > section[aria-hidden="false"]{display:block}
+
 /* ---------------- Table ---------------- */
 .table-wrap{overflow:auto}
-table{width:100%; border-collapse:collapse; background:var(--surface); border-radius:12px}
-th,td{white-space:nowrap; padding:10px 12px; border-bottom:1px dashed hsl(231 30% 70%/.20); text-align:left; font-size:14px}
-thead th{position:sticky; top:0; z-index:1; background:transparent; font-weight:900}
+table{width:100%; border-collapse:separate; border-spacing:0; background:var(--panel-2); border-radius:14px; border:var(--border-strong)}
+th,td{white-space:nowrap; padding:12px 14px; border-bottom:1px solid hsl(231 30% 70%/.18); text-align:left; font-size:14px}
+thead th{
+  position:sticky; top:0; z-index:1; background:linear-gradient(180deg, rgba(92,200,255,.06), transparent);
+  font-weight:900; border-bottom:2px solid hsl(0 0% 100%/.26);
+}
 tbody td:first-child, thead th:first-child{
-  position:sticky; left:0; z-index:2; background:var(--surface);
+  position:sticky; left:0; z-index:2; background:inherit; border-right:1px solid hsl(0 0% 100%/.10);
 }
 tbody tr:hover{ background:linear-gradient(90deg,rgba(255,216,107,.06),transparent) }
 tr.row-vh{background:linear-gradient(90deg,rgba(34,197,94,.09),transparent)}
@@ -294,38 +271,29 @@ tr.row-h {background:linear-gradient(90deg,rgba(46,168,255,.09),transparent)}
 tr.row-m {background:linear-gradient(90deg,rgba(125,185,255,.06),transparent)}
 tr.row-l {background:linear-gradient(90deg,rgba(255,107,107,.10),transparent)}
 tr.row-vl{background:linear-gradient(90deg,rgba(107,114,128,.10),transparent)}
-.dense th,.dense td{padding:7px 10px}
-.pager{display:flex; gap:.5rem; justify-content:flex-end}
+.dense th,.dense td{padding:8px 10px}
+.pager{display:flex; gap:.5rem; justify-content:flex-end; padding:8px 0}
 .table-controls{display:flex; gap:.5rem; align-items:center; flex-wrap:wrap}
 
-/* ---------------- Drawer ---------------- */
-.drawer{
-  position:fixed; top:0; right:-460px; width:460px; height:100dvh;
-  background:var(--panel); border-left:var(--border); box-shadow:var(--shadow-2);
-  transition:right .25s var(--ease-1); z-index:120; display:flex; flex-direction:column
-}
+/* ---------------- Drawer, Help, Toasts, CmdK ---------------- */
+.drawer{ position:fixed; top:0; right:-480px; width:480px; height:100dvh;
+  background:var(--panel); border-left:var(--border-strong); box-shadow:var(--shadow-2);
+  transition:right .25s var(--ease-1); z-index:120; display:flex; flex-direction:column }
 .drawer.open{right:0}
-.drawer header{padding:12px 14px; border-bottom:var(--border); display:flex; align-items:center; justify-content:space-between}
+.drawer header{padding:12px 14px; border-bottom:var(--border-strong); display:flex; align-items:center; justify-content:space-between}
 .drawer .content{padding:14px; overflow:auto; display:flex; flex-direction:column; gap:10px}
-
-/* ---------------- Help modal ---------------- */
-.help{position:fixed; inset:0; display:none; align-items:center; justify-content:center; background:rgba(0,0,0,.4); z-index:160}
+.help{position:fixed; inset:0; display:none; align-items:center; justify-content:center; background:rgba(0,0,0,.45); z-index:160}
 .help.open{display:flex}
-.help .box{background:var(--panel); border:var(--border); padding:16px; border-radius:16px; width:min(92vw,720px); box-shadow:var(--shadow-2)}
-
-/* ---------------- Toasts & a11y ---------------- */
+.help .box{background:var(--panel); border:var(--border-strong); padding:16px; border-radius:16px; width:min(92vw,720px); box-shadow:var(--shadow-2)}
 .toasts{position:fixed; right:14px; bottom:14px; display:flex; flex-direction:column; gap:8px; z-index:150}
-.toast{background:var(--panel); border:var(--border); border-left:4px solid var(--nu-gold-2); padding:10px 12px; border-radius:12px; box-shadow:var(--shadow-2)}
+.toast{background:var(--panel); border:var(--border-strong); border-left:4px solid var(--nu-gold-2); padding:10px 12px; border-radius:12px; box-shadow:var(--shadow-2)}
 .sr-only{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
-
-/* ---------------- Command Palette ---------------- */
-.cmdk{ position:fixed; inset:0; display:none; align-items:flex-start; justify-content:center;
-       padding-top:10vh; background:rgba(0,0,0,.45); z-index:180; }
+.cmdk{ position:fixed; inset:0; display:none; align-items:flex-start; justify-content:center; padding-top:10vh; background:rgba(0,0,0,.5); z-index:180; }
 .cmdk.open{ display:flex }
 .cmdk .box{ width:min(92vw,720px); border-radius:16px; background:var(--panel);
-            border:var(--border); box-shadow:var(--shadow-2); overflow:hidden }
-.cmdk .head{ display:flex; align-items:center; gap:8px; padding:10px 12px; border-bottom:var(--border) }
-.cmdk input{ all:unset; flex:1; padding:10px 12px; border-radius:10px; background:var(--surface); font-weight:700 }
+            border:var(--border-strong); box-shadow:var(--shadow-2); overflow:hidden }
+.cmdk .head{ display:flex; align-items:center; gap:8px; padding:10px 12px; border-bottom:var(--border-strong) }
+.cmdk input{ all:unset; flex:1; padding:10px 12px; border-radius:10px; background:var(--surface); font-weight:800 }
 .cmdk ul{ margin:0; padding:6px; max-height:48vh; overflow:auto; list-style:none }
 .cmdk li{ padding:10px 12px; border-radius:12px; cursor:pointer; display:flex; align-items:center; justify-content:space-between }
 .cmdk li:hover,.cmdk li.active{ background:linear-gradient(90deg, rgba(92,200,255,.12), rgba(255,216,107,.12)); }
@@ -338,43 +306,49 @@ tr.row-vl{background:linear-gradient(90deg,rgba(107,114,128,.10),transparent)}
 
 /* ---------------- Print ---------------- */
 @media print{
-  header.nav, .toolbar, .toasts, .help, .cmdk, .bg-img { display:none !important }
+  header.nav, .toolbar, .toasts, .help, .cmdk { display:none !important }
   .container{max-width:none}
 }
 </style>
 </head>
 
 <body>
-<!-- Accessibility & background -->
 <a href="#main" class="skip-link">Skip to content</a>
-<div class="bg-img" aria-hidden="true"></div>
 
 <!-- ===== NAV ===== -->
 <header class="nav" role="navigation" aria-label="Primary">
-  <div class="crest" aria-hidden="true"></div>
-  <div class="brand">National University – Lipa • Admin Command Center</div>
-  <div class="right">
-    <div id="netDot" class="net-dot" title="Network OK" aria-label="Network status"></div>
-    <button id="themeBtn" class="btn icon" title="Toggle theme" aria-label="Toggle theme">🌓</button>
-    <button id="contrastBtn" class="btn icon" title="High contrast" aria-label="High contrast">◑</button>
-    <button id="helpBtn" class="btn icon" title="Keyboard shortcuts" aria-label="Keyboard shortcuts">?</button>
-    <a class="btn icon" href="/health" title="System health" target="_blank" aria-label="System health">🩺</a>
-    <a class="btn icon" href="/logout" title="Logout" aria-label="Logout">⎋</a>
+  <div class="nav-inner">
+    <div class="brand-wrap">
+      <div class="crest" aria-hidden="true"></div>
+      <div class="brand">
+        <b>National University – Lipa</b>
+        <small>Admin Command Center</small>
+      </div>
+    </div>
+    <div class="nav-actions">
+      <div id="netDot" class="net-dot" title="Network OK" aria-label="Network status"></div>
+      <button id="themeBtn" class="btn icon" title="Toggle theme" aria-label="Toggle theme">🌓</button>
+      <button id="contrastBtn" class="btn icon" title="High contrast" aria-label="High contrast">◑</button>
+      <button id="helpBtn" class="btn icon" title="Keyboard shortcuts" aria-label="Keyboard shortcuts">?</button>
+      <a class="btn icon" href="/health" title="System health" target="_blank" aria-label="System health">🩺</a>
+      <a class="btn icon" href="/logout" title="Logout" aria-label="Logout">⎋</a>
+    </div>
   </div>
 </header>
 
 <!-- ===== STICKY TOOLBAR ===== -->
 <div class="toolbar" role="region" aria-label="Summary chips">
   <div class="row">
-    <span class="chip" id="chipTotal">—</span>
-    <span class="chip" id="chipAvg">—</span>
-    <span class="chip" id="chipVH">VH: —</span>
-    <span class="chip" id="chipH">H: —</span>
-    <span class="chip" id="chipM">M: —</span>
-    <span class="chip" id="chipL">L: —</span>
-    <span class="chip" id="chipVL">VL: —</span>
-
-    <div style="margin-left:auto; display:flex; gap:6px; align-items:center; flex-wrap:wrap">
+    <div class="chips">
+      <span class="chip" id="chipTotal">—</span>
+      <span class="chip" id="chipAvg">—</span>
+      <span class="chip" id="chipVH">VH: —</span>
+      <span class="chip" id="chipH">H: —</span>
+      <span class="chip" id="chipM">M: —</span>
+      <span class="chip" id="chipL">L: —</span>
+      <span class="chip" id="chipVL">VL: —</span>
+    </div>
+    <div class="view-controls">
       <select id="presets" title="Saved views"><option value="">View: Default</option></select>
       <button id="savePreset" class="btn">Save View</button>
       <button id="deletePreset" class="btn">Delete View</button>
@@ -387,47 +361,56 @@ tr.row-vl{background:linear-gradient(90deg,rgba(107,114,128,.10),transparent)}
 <!-- ===== PAGE ===== -->
 <main id="main" class="container" aria-live="polite">
   <div class="page-head">
-    <h2 class="page-title">AI‑Powered Enrollment Monitor</h2>
+    <h2 class="page-title">AI-Powered Enrollment Monitor</h2>
+    <div class="filter-toggle">
+      <button id="filtersToggle" class="btn">Filters</button>
+    </div>
   </div>
 
-  <!-- Filters -->
-  <section class="card" style="margin-bottom:12px" aria-label="Filters">
-    <div class="form-grid">
-      <label>Program
-        <select id="filterProgram"><option value="">All Programs</option></select>
-      </label>
-      <label>Region
-        <select id="filterRegion"><option value="">All Regions</option></select>
-      </label>
-      <label>Bucket
-        <select id="filterBucket">
-          <option value="">All</option>
-          <option value="VH">Very High</option>
-          <option value="H">High</option>
-          <option value="M">Medium</option>
-          <option value="L">Low</option>
-          <option value="VL">Very Low</option>
-        </select>
-      </label>
-      <label>Min Confidence
-        <input id="filterMinConf" type="range" min="0" max="1" step=".05" value="0" aria-label="Minimum confidence">
-        <small><span id="filterMinConfVal">0.00</span></small>
-      </label>
-      <label>Lookback (days)
-        <input id="filterDays" type="number" min="1" max="365" value="30">
-      </label>
-      <label>Search (program / region)
-        <input id="filterSearch" type="text" placeholder="Type to filter table only…" aria-label="Search table (client-side)">
-      </label>
-      <div class="actions" style="align-self:end; display:flex; gap:.5rem; flex-wrap:wrap; justify-content:flex-end">
-        <button id="applyFilters" class="btn primary">Apply</button>
-        <button id="resetFilters" class="btn" type="button">Reset</button>
-        <label class="btn" title="Auto-refresh every 60s" style="gap:6px; align-items:center">
-          <input type="checkbox" id="autoRefresh"> Auto Refresh
+  <!-- Filters (collapsible) -->
+  <section class="card" id="filtersCard" style="margin-bottom:12px" aria-label="Filters">
+    <div class="card-head">
+      <h3>Filters</h3>
+      <div class="muted" style="font-weight:700">Refine datasets & views</div>
+    </div>
+    <div class="card-body">
+      <div class="form-grid">
+        <label>Program
+          <select id="filterProgram"><option value="">All Programs</option></select>
         </label>
-        <a class="btn" id="exportCsv" href="/api/admin/export.csv?days=30">Export CSV (server)</a>
-        <button id="exportClientCsv" class="btn" type="button">Export Visible CSV</button>
-        <label class="btn" title="Dense table rows"><input type="checkbox" id="denseRows"> Dense</label>
+        <label>Region
+          <select id="filterRegion"><option value="">All Regions</option></select>
+        </label>
+        <label>Bucket
+          <select id="filterBucket">
+            <option value="">All</option>
+            <option value="VH">Very High</option>
+            <option value="H">High</option>
+            <option value="M">Medium</option>
+            <option value="L">Low</option>
+            <option value="VL">Very Low</option>
+          </select>
+        </label>
+        <label>Min Confidence
+          <input id="filterMinConf" type="range" min="0" max="1" step=".05" value="0" aria-label="Minimum confidence">
+          <small><span id="filterMinConfVal">0.00</span></small>
+        </label>
+        <label>Lookback (days)
+          <input id="filterDays" type="number" min="1" max="365" value="30">
+        </label>
+        <label>Search (program / region)
+          <input id="filterSearch" type="text" placeholder="Type to filter table only…" aria-label="Search table (client-side)">
+        </label>
+        <div class="actions" style="align-self:end; display:flex; gap:.5rem; flex-wrap:wrap; justify-content:flex-end">
+          <button id="applyFilters" class="btn primary">Apply</button>
+          <button id="resetFilters" class="btn" type="button">Reset</button>
+          <label class="btn" title="Auto-refresh every 60s" style="gap:6px; align-items:center">
+            <input type="checkbox" id="autoRefresh"> Auto Refresh
+          </label>
+          <a class="btn" id="exportCsv" href="/api/admin/export.csv?days=30">Export CSV (server)</a>
+          <button id="exportClientCsv" class="btn" type="button">Export Visible CSV</button>
+          <label class="btn" title="Dense table rows"><input type="checkbox" id="denseRows"> Dense</label>
+        </div>
       </div>
     </div>
   </section>
@@ -435,145 +418,204 @@ tr.row-vl{background:linear-gradient(90deg,rgba(107,114,128,.10),transparent)}
   <!-- KPI row -->
   <section class="grid-4" aria-label="Key performance indicators">
     <div class="card kpi" style="box-shadow:var(--shadow-2)">
-      <h3>Totals</h3>
-      <div style="display:flex; align-items:center; gap:8px">
-        <div id="kpiTotal" class="kpi-num">—</div>
-        <span id="kpiTotalDelta" class="delta" style="display:none">0%</span>
+      <div class="card-head"><h3>Totals</h3></div>
+      <div class="card-body">
+        <div style="display:flex; align-items:center; gap:8px">
+          <div id="kpiTotal" class="kpi-num">—</div>
+          <span id="kpiTotalDelta" class="delta" style="display:none">0%</span>
+        </div>
+        <small id="kpiTotalHint" class="muted"></small>
       </div>
-      <small id="kpiTotalHint" class="muted"></small>
     </div>
     <div class="card kpi">
-      <h3>Avg Likelihood</h3>
-      <div style="display:flex; align-items:center; gap:8px">
-        <div id="kpiAvgProb" class="kpi-num">—</div>
-        <span id="kpiProbDelta" class="delta" style="display:none">0%</span>
+      <div class="card-head"><h3>Avg Likelihood</h3></div>
+      <div class="card-body">
+        <div style="display:flex; align-items:center; gap:8px">
+          <div id="kpiAvgProb" class="kpi-num">—</div>
+          <span id="kpiProbDelta" class="delta" style="display:none">0%</span>
+        </div>
+        <canvas id="sparkProb" class="spark" aria-hidden="true"></canvas>
       </div>
-      <canvas id="sparkProb" class="spark" aria-hidden="true"></canvas>
     </div>
     <div class="card kpi">
-      <h3>Avg Confidence</h3>
-      <div style="display:flex; align-items:center; gap:8px">
-        <div id="kpiAvgConf" class="kpi-num">—</div>
-        <span id="kpiConfDelta" class="delta" style="display:none">0%</span>
+      <div class="card-head"><h3>Avg Confidence</h3></div>
+      <div class="card-body">
+        <div style="display:flex; align-items:center; gap:8px">
+          <div id="kpiAvgConf" class="kpi-num">—</div>
+          <span id="kpiConfDelta" class="delta" style="display:none">0%</span>
+        </div>
+        <canvas id="sparkConf" class="spark" aria-hidden="true"></canvas>
       </div>
-      <canvas id="sparkConf" class="spark" aria-hidden="true"></canvas>
     </div>
     <div class="card kpi">
-      <h3>VH / H / M / L / VL</h3>
-      <div id="kpiBuckets5" class="kpi-num">—</div>
-      <small class="muted">5‑level segmentation</small>
+      <div class="card-head"><h3>VH / H / M / L / VL</h3></div>
+      <div class="card-body">
+        <div id="kpiBuckets5" class="kpi-num">—</div>
+        <small class="muted">5-level segmentation</small>
+      </div>
     </div>
   </section>
 
   <!-- Priority Queues -->
   <section class="grid-3" aria-label="Priority queues">
     <div class="card">
-      <div style="display:flex;align-items:center;gap:8px"><h3>Call Now</h3><span class="badge badge-vh">Very High</span></div>
-      <ul id="queueCallNow" class="queue-list"></ul>
+      <div class="card-head"><h3>Call Now</h3><span class="badge badge-vh">Very High</span></div>
+      <div class="card-body"><ul id="queueCallNow" class="queue-list"></ul></div>
     </div>
     <div class="card">
-      <div style="display:flex;align-items:center;gap:8px"><h3>Warm</h3><span class="badge badge-h">High</span><span class="badge badge-m">Medium</span></div>
-      <ul id="queueWarm" class="queue-list"></ul>
+      <div class="card-head"><h3>Warm</h3><span class="badge badge-h">High</span><span class="badge badge-m">Medium</span></div>
+      <div class="card-body"><ul id="queueWarm" class="queue-list"></ul></div>
     </div>
     <div class="card">
-      <div style="display:flex;align-items:center;gap:8px"><h3>Nurture</h3><span class="badge badge-l">Low</span><span class="badge badge-vl">Very Low</span></div>
-      <ul id="queueNurture" class="queue-list"></ul>
+      <div class="card-head"><h3>Nurture</h3><span class="badge badge-l">Low</span><span class="badge badge-vl">Very Low</span></div>
+      <div class="card-body"><ul id="queueNurture" class="queue-list"></ul></div>
     </div>
   </section>
 
   <!-- Smart Insights -->
   <section class="card" aria-label="Smart insights">
-    <div style="display:flex;align-items:center;gap:8px;justify-content:space-between">
-      <div><h3>Smart Insights</h3><span class="muted">Data‑driven suggestions</span></div>
+    <div class="card-head"><h3>Smart Insights</h3><span class="muted">Data-driven suggestions</span></div>
+    <div class="card-body">
+      <ul id="insightsList" style="margin:0;padding:0 0 0 18px;line-height:1.7">
+        <li class="muted">Loading insights…</li>
+      </ul>
     </div>
-    <ul id="insightsList" style="margin:0;padding:0 0 0 18px;line-height:1.7">
-      <li class="muted">Loading insights…</li>
-    </ul>
   </section>
 
-  <!-- Charts -->
-  <section class="grid-2" aria-label="Composition charts">
-    <div class="card">
-      <div style="display:flex;align-items:center;gap:8px;justify-content:space-between">
-        <div>
-          <h3>Bucket Share</h3>
-          <span class="muted" id="sumBuckets">5‑level (share of all applicants)</span>
+  <!-- ===== Charts (Tabbed) ===== -->
+  <section class="card" aria-label="Analytics">
+    <div class="card-head">
+      <h3>Analytics</h3>
+      <div class="tabs" role="tablist" aria-label="Chart groups">
+        <button class="tab" role="tab" id="tab-comp" aria-controls="panel-comp" aria-selected="true">Composition</button>
+        <button class="tab" role="tab" id="tab-dist" aria-controls="panel-dist" aria-selected="false">Distribution</button>
+        <button class="tab" role="tab" id="tab-hist" aria-controls="panel-hist" aria-selected="false">Histograms</button>
+        <button class="tab" role="tab" id="tab-trend" aria-controls="panel-trend" aria-selected="false">Trend</button>
+        <button class="tab" role="tab" id="tab-heat" aria-controls="panel-heat" aria-selected="false">Heatmap</button>
+        <button class="tab" role="tab" id="tab-scatter" aria-controls="panel-scatter" aria-selected="false">Priority</button>
+      </div>
+    </div>
+    <div class="card-body tabpanels">
+      <!-- Composition -->
+      <section id="panel-comp" role="tabpanel" aria-labelledby="tab-comp" aria-hidden="false">
+        <div class="grid-2" aria-label="Composition charts">
+          <div class="card">
+            <div class="card-head">
+              <div>
+                <h3>Bucket Share</h3>
+                <span class="muted" id="sumBuckets">5-level (share of all applicants)</span>
+              </div>
+              <div class="chart-tools"><button class="btn" data-dl="#chartBuckets5">Download</button></div>
+            </div>
+            <div class="card-body">
+              <div class="chart"><canvas id="chartBuckets5" data-chart class="skeleton" aria-label="Bucket share (stacked bar)"></canvas></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head">
+              <div><h3>Program Popularity</h3><span class="muted" id="sumPrograms">Top programs</span></div>
+              <div class="chart-tools"><button class="btn" data-dl="#chartPrograms">Download</button></div>
+            </div>
+            <div class="card-body">
+              <div class="chart"><canvas id="chartPrograms" data-chart class="skeleton" aria-label="Program bars"></canvas></div>
+            </div>
+          </div>
         </div>
-        <div class="chart-tools"><button class="btn" data-dl="#chartBuckets5">Download</button></div>
-      </div>
-      <div class="chart"><canvas id="chartBuckets5" data-chart class="skeleton" aria-label="Bucket share (stacked bar)"></canvas></div>
-    </div>
-    <div class="card">
-      <div style="display:flex;align-items:center;gap:8px;justify-content:space-between">
-        <div><h3>Program Popularity</h3><span class="muted" id="sumPrograms">Top programs</span></div>
-        <div class="chart-tools"><button class="btn" data-dl="#chartPrograms">Download</button></div>
-      </div>
-      <div class="chart"><canvas id="chartPrograms" data-chart class="skeleton" aria-label="Program bars"></canvas></div>
-    </div>
-  </section>
+      </section>
 
-  <section class="grid-2" aria-label="Distribution charts">
-    <div class="card">
-      <div style="display:flex;align-items:center;gap:8px;justify-content:space-between">
-        <div><h3>Region Distribution</h3><span class="muted" id="sumRegions">Applicants by region</span></div>
-        <div class="chart-tools"><button class="btn" data-dl="#chartRegions">Download</button></div>
-      </div>
-      <div class="chart"><canvas id="chartRegions" data-chart class="skeleton" aria-label="Region bars"></canvas></div>
-    </div>
-    <div class="card">
-      <div style="display:flex;align-items:center;gap:8px;justify-content:space-between">
-        <div><h3>Student Type Split</h3><span class="muted" id="sumTypes">Full‑time vs Working</span></div>
-        <div class="chart-tools"><button class="btn" data-dl="#chartStudentType">Download</button></div>
-      </div>
-      <div class="chart"><canvas id="chartStudentType" data-chart class="skeleton" aria-label="Type pie"></canvas></div>
-    </div>
-  </section>
+      <!-- Distribution -->
+      <section id="panel-dist" role="tabpanel" aria-labelledby="tab-dist" aria-hidden="true">
+        <div class="grid-2" aria-label="Distribution charts">
+          <div class="card">
+            <div class="card-head">
+              <div><h3>Region Distribution</h3><span class="muted" id="sumRegions">Applicants by region</span></div>
+              <div class="chart-tools"><button class="btn" data-dl="#chartRegions">Download</button></div>
+            </div>
+            <div class="card-body">
+              <div class="chart"><canvas id="chartRegions" data-chart class="skeleton" aria-label="Region bars"></canvas></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head">
+              <div><h3>Student Type Split</h3><span class="muted" id="sumTypes">Full-time vs Working</span></div>
+              <div class="chart-tools"><button class="btn" data-dl="#chartStudentType">Download</button></div>
+            </div>
+            <div class="card-body">
+              <div class="chart"><canvas id="chartStudentType" data-chart class="skeleton" aria-label="Type pie"></canvas></div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-  <section class="grid-2" aria-label="Histograms">
-    <div class="card">
-      <div style="display:flex;align-items:center;gap:8px;justify-content:space-between">
-        <div><h3>Likelihood Histogram</h3><span class="muted">L2E%</span></div>
-        <div class="chart-tools"><button class="btn" data-dl="#chartHistProb">Download</button></div>
-      </div>
-      <div class="chart"><canvas id="chartHistProb" data-chart class="skeleton" aria-label="Likelihood histogram"></canvas></div>
-    </div>
-    <div class="card">
-      <div style="display:flex;align-items:center;gap:8px;justify-content:space-between">
-        <div><h3>Confidence Histogram</h3><span class="muted">Confidence%</span></div>
-        <div class="chart-tools"><button class="btn" data-dl="#chartHistConf">Download</button></div>
-      </div>
-      <div class="chart"><canvas id="chartHistConf" data-chart class="skeleton" aria-label="Confidence histogram"></canvas></div>
-    </div>
-  </section>
+      <!-- Histograms -->
+      <section id="panel-hist" role="tabpanel" aria-labelledby="tab-hist" aria-hidden="true">
+        <div class="grid-2" aria-label="Histograms">
+          <div class="card">
+            <div class="card-head">
+              <div><h3>Likelihood Histogram</h3><span class="muted">L2E%</span></div>
+              <div class="chart-tools"><button class="btn" data-dl="#chartHistProb">Download</button></div>
+            </div>
+            <div class="card-body">
+              <div class="chart"><canvas id="chartHistProb" data-chart class="skeleton" aria-label="Likelihood histogram"></canvas></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head">
+              <div><h3>Confidence Histogram</h3><span class="muted">Confidence%</span></div>
+              <div class="chart-tools"><button class="btn" data-dl="#chartHistConf">Download</button></div>
+            </div>
+            <div class="card-body">
+              <div class="chart"><canvas id="chartHistConf" data-chart class="skeleton" aria-label="Confidence histogram"></canvas></div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-  <section class="card" aria-label="Trend line">
-    <div style="display:flex;align-items:center;gap:8px;justify-content:space-between">
-      <div><h3>Trend</h3><span class="muted">Avg Likelihood & Confidence</span></div>
-      <div class="chart-tools"><button class="btn" data-dl="#chartTrend">Download</button></div>
-    </div>
-    <div class="chart"><canvas id="chartTrend" data-chart class="skeleton" aria-label="Trend line"></canvas></div>
-  </section>
+      <!-- Trend -->
+      <section id="panel-trend" role="tabpanel" aria-labelledby="tab-trend" aria-hidden="true">
+        <div class="card" aria-label="Trend line">
+          <div class="card-head">
+            <div><h3>Trend</h3><span class="muted">Avg Likelihood & Confidence</span></div>
+            <div class="chart-tools"><button class="btn" data-dl="#chartTrend">Download</button></div>
+          </div>
+          <div class="card-body">
+            <div class="chart"><canvas id="chartTrend" data-chart class="skeleton" aria-label="Trend line"></canvas></div>
+          </div>
+        </div>
+      </section>
 
-  <section class="card" aria-label="Heatmap">
-    <div style="display:flex;align-items:center;gap:8px;justify-content:space-between">
-      <div><h3>Likelihood × Confidence Heatmap</h3><span class="muted">Concentration</span></div>
-      <div class="chart-tools"><button class="btn" data-dl="#chartHeat">Download</button></div>
-    </div>
-    <div class="chart"><canvas id="chartHeat" data-chart class="skeleton" aria-label="Heatmap bubbles"></canvas></div>
-  </section>
+      <!-- Heatmap -->
+      <section id="panel-heat" role="tabpanel" aria-labelledby="tab-heat" aria-hidden="true">
+        <div class="card" aria-label="Heatmap">
+          <div class="card-head">
+            <div><h3>Likelihood × Confidence Heatmap</h3><span class="muted">Concentration</span></div>
+            <div class="chart-tools"><button class="btn" data-dl="#chartHeat">Download</button></div>
+          </div>
+          <div class="card-body">
+            <div class="chart"><canvas id="chartHeat" data-chart class="skeleton" aria-label="Heatmap bubbles"></canvas></div>
+          </div>
+        </div>
+      </section>
 
-  <section class="card" aria-label="Priority scatter">
-    <div style="display:flex;align-items:center;gap:8px;justify-content:space-between">
-      <div><h3>Priority Quadrant</h3><span class="muted">Scatter of L2E% vs Confidence%</span></div>
-      <div class="chart-tools"><button class="btn" data-dl="#chartScatter">Download</button></div>
+      <!-- Priority Scatter -->
+      <section id="panel-scatter" role="tabpanel" aria-labelledby="tab-scatter" aria-hidden="true">
+        <div class="card" aria-label="Priority scatter">
+          <div class="card-head">
+            <div><h3>Priority Quadrant</h3><span class="muted">Scatter of L2E% vs Confidence%</span></div>
+            <div class="chart-tools"><button class="btn" data-dl="#chartScatter">Download</button></div>
+          </div>
+          <div class="card-body">
+            <div class="chart"><canvas id="chartScatter" data-chart class="skeleton" aria-label="Priority scatter"></canvas></div>
+          </div>
+        </div>
+      </section>
     </div>
-    <div class="chart"><canvas id="chartScatter" data-chart class="skeleton" aria-label="Priority scatter"></canvas></div>
   </section>
 
   <!-- Worklist -->
   <section class="card" aria-label="Applicants worklist">
-    <div style="display:flex; align-items:center; gap:.5rem; flex-wrap:wrap; margin-bottom:.25rem;">
-      <h3 style="margin-right:auto;">Applicants Worklist</h3>
+    <div class="card-head">
+      <h3>Applicants Worklist</h3>
       <div class="table-controls">
         <label>Sort
           <select id="tblSort">
@@ -596,27 +638,29 @@ tr.row-vl{background:linear-gradient(90deg,rgba(107,114,128,.10),transparent)}
         <span id="tblMeta" class="muted" style="margin-left:12px"></span>
       </div>
     </div>
-    <div class="table-wrap" id="tableWrap">
-      <table class="table" id="topTable">
-        <thead>
-          <tr>
-            <th title="Bucket from predicted likelihood">Bucket</th>
-            <th title="Priority = Likelihood × Confidence">Priority</th>
-            <th title="Likelihood to enroll">Likelihood</th>
-            <th title="Prediction confidence">Confidence</th>
-            <th>Program</th>
-            <th>Student Type</th>
-            <th>Region</th>
-            <th>Created</th>
-          </tr>
-        </thead>
-        <tbody><!-- rows injected --></tbody>
-      </table>
-    </div>
-    <div class="pager" style="margin-top:.5rem;">
-      <button id="prevPage" class="btn">Prev</button>
-      <span id="pageInfo"></span>
-      <button id="nextPage" class="btn">Next</button>
+    <div class="card-body">
+      <div class="table-wrap" id="tableWrap">
+        <table class="table" id="topTable">
+          <thead>
+            <tr>
+              <th title="Bucket from predicted likelihood">Bucket</th>
+              <th title="Priority = Likelihood × Confidence">Priority</th>
+              <th title="Likelihood to enroll">Likelihood</th>
+              <th title="Prediction confidence">Confidence</th>
+              <th>Program</th>
+              <th>Student Type</th>
+              <th>Region</th>
+              <th>Created</th>
+            </tr>
+          </thead>
+          <tbody><!-- rows injected --></tbody>
+        </table>
+      </div>
+      <div class="pager">
+        <button id="prevPage" class="btn">Prev</button>
+        <span id="pageInfo"></span>
+        <button id="nextPage" class="btn">Next</button>
+      </div>
     </div>
   </section>
 </main>
@@ -677,40 +721,69 @@ tr.row-vl{background:linear-gradient(90deg,rgba(107,114,128,.10),transparent)}
 const BACKEND_BASE = ""; // Same-origin by default.
 
 /***********************
- * THEME TOGGLE
+ * THEME & NAV
  ***********************/
 (function(){
   const KEY='nu_theme_mode';
-  const root = document.body;
-  const meta = document.getElementById('metaTheme');
+  const root=document.body;
+  const meta=document.getElementById('metaTheme');
   const apply=(mode)=>{
-    const finalMode = (mode==='auto')
-      ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark':'light')
-      : mode;
-    root.setAttribute('data-theme', finalMode);
-    document.documentElement.style.colorScheme = finalMode;
-    meta?.setAttribute('content', finalMode==='dark' ? '#0a122e' : '#ffffff');
+    const final=(mode==='auto') ? (matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light') : mode;
+    root.setAttribute('data-theme', final);
+    document.documentElement.style.colorScheme = final;
+    meta?.setAttribute('content', final==='dark' ? '#0a122e' : '#ffffff');
   };
   const saved = ['auto','light','dark'].includes(localStorage.getItem(KEY)) ? localStorage.getItem(KEY) : 'dark';
   apply(saved);
   document.getElementById('themeBtn')?.addEventListener('click', ()=>{
-    const cur = localStorage.getItem(KEY) || saved;
-    const next = cur==='dark' ? 'light' : 'dark';
-    localStorage.setItem(KEY, next);
-    apply(next);
-    toast('Theme: '+next);
+    const cur=localStorage.getItem(KEY)||saved;
+    const next=cur==='dark'?'light':'dark';
+    localStorage.setItem(KEY,next); apply(next); toast('Theme: '+next);
   });
 })();
 
 /***********************
- * SIMPLE ICONS
+ * COLLAPSIBLE FILTERS
  ***********************/
-const Icons = {
-  phone:`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.3 1.77.57 2.61a2 2 0 0 1-.45 2.11L8 9a16 16 0 0 0 7 7l.56-1.25a2 2 0 0 1 2.11-.45c.84.27 1.71.45 2.61.57A2 2 0 0 1 22 16.92z"/></svg>`
-};
+(function(){
+  const card=document.getElementById('filtersCard');
+  const btn=document.getElementById('filtersToggle');
+  let open=true;
+  function set(openNow){
+    open=openNow;
+    card.style.display=open?'block':'none';
+    btn.textContent=open?'Hide Filters':'Show Filters';
+  }
+  set(true);
+  btn.addEventListener('click', ()=> set(!open));
+})();
+
+/***********************
+ * SIMPLE ICONS (optional)
+ ***********************/
+const Icons={ phone:`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.3 1.77.57 2.61a2 2 0 0 1-.45 2.11L8 9a16 16 0 0 0 7 7l.56-1.25a2 2 0 0 1 2.11-.45c.84.27 1.71.45 2.61.57A2 2 0 0 1 22 16.92z"/></svg>` };
+
+/***********************
+ * TABS (charts)
+ ***********************/
+(function(){
+  const tabs=[...document.querySelectorAll('.tab[role="tab"]')];
+  const panels=[...document.querySelectorAll('.tabpanels > section[role="tabpanel"]')];
+  function show(id){
+    tabs.forEach(t=> t.setAttribute('aria-selected', t.id===id ? 'true':'false'));
+    panels.forEach(p=> p.setAttribute('aria-hidden', p.id.replace('panel','tab')!==id));
+    // On tab change, trigger a replot so canvases layout correctly
+    if (window.__NU_REPLOT) window.__NU_REPLOT();
+  }
+  tabs.forEach(t=> t.addEventListener('click', ()=> show(t.id)));
+  // init default
+  show('tab-comp');
+})();
 
 /***********************
  * CHARTS (neon-simple canvas)
+ * - Fixed DPR sizing prevents "growing"
+ * - Single ResizeObserver re-plots without stacking
  ***********************/
 const COLORS=['#22c55e','#34a3ff','#f5a524','#ff6b6b','#94a3b8','#0b5bd5','#d4af37','#4f46e5','#06b6d4','#f97316'];
 const dpr = () => window.devicePixelRatio || 1;
@@ -735,7 +808,6 @@ function legend(ctx, labels, x=12, y=12){
     ctx.fillStyle = '#c8d6ff'; ctx.fillText(t, x+20, y+12+i*20); });
 }
 const Charts={
-  /* 100% stacked (for bucket share) */
   stacked100(c, vals, labels){
     const {ctx,w,h}=prepCanvas(c); c.classList.remove('skeleton');
     const total = Math.max(1, vals.reduce((a,b)=>a+b,0));
@@ -743,7 +815,6 @@ const Charts={
     ctx.strokeStyle='rgba(200,210,240,.25)'; ctx.beginPath(); ctx.moveTo(L,T+H); ctx.lineTo(L+W,T+H); ctx.stroke();
     let x=L;
     vals.forEach((v,i)=>{ const px=(v/total)*W; ctx.fillStyle=COLORS[i%COLORS.length]; ctx.fillRect(x, T+H*0.25, px, H*0.5); x+=px; });
-    /* inline % labels (if room) */
     x=L; ctx.fillStyle='#c8d6ff'; ctx.font='12px Inter, system-ui';
     vals.forEach((v)=>{ const px=(v/total)*W; const t= total? ((v/total)*100).toFixed(0)+'%':'0%'; if(px>34){ ctx.fillText(t, x+px/2-10, T+H*0.25-6); } x+=px; });
     legend(ctx, labels);
@@ -919,7 +990,7 @@ const Charts={
     return {key:'VL',label:'Very Low',class:'badge-vl'};
   }
 
-  // URL helpers (shareable)
+  // URL helpers
   function readFilters(){
     return {
       program:filterProgram.value||'',
@@ -948,9 +1019,7 @@ const Charts={
   function buildQS(basePath){
     const path = fullUrl(basePath);
     const f = readFilters();
-    const qs = new URLSearchParams({
-      days:f.days, min_conf:f.min_conf, sort:f.sort, dir:f.dir, page_size:f.page_size
-    });
+    const qs = new URLSearchParams({ days:f.days, min_conf:f.min_conf, sort:f.sort, dir:f.dir, page_size:f.page_size });
     if (f.program) qs.set('program', f.program);
     if (f.region)  qs.set('region', f.region);
     if (['H','M','L'].includes(f.bucket)) qs.set('bucket', f.bucket); // VH/VL derived client-side
@@ -1052,7 +1121,7 @@ const Charts={
     (m.region_tokens||[]).forEach(tok=>{ const o=document.createElement('option'); o.value=tok; o.textContent=titleize(tok); filterRegion.appendChild(o); });
     keep(filterRegion,curReg);
 
-    // Buckets / counts (compute for chips & chart)
+    // Buckets / counts (chips & chart)
     const counts5={VH:0,H:0,M:0,L:0,VL:0};
     (m.top||[]).forEach(r=>counts5[bucketOf(r.prob||0).key]++);
     if ((m.top||[]).length<10){
@@ -1125,12 +1194,12 @@ const Charts={
   function renderInsights(m, counts5){
     const items=[];
     const medUp = (counts5.M + counts5.L + counts5.VL) > (counts5.VH + counts5.H);
-    if(medUp) items.push('Most applicants are Medium‑or‑below likelihood. Consider targeted nudges (fee‑waiver trials, counselor callbacks, deadline reminders).');
+    if(medUp) items.push('Most applicants are Medium-or-below likelihood. Consider targeted nudges (fee-waiver trials, counselor callbacks, deadline reminders).');
     if((m.summary.avg_conf||0) < 0.55) items.push('Prediction confidence is modest. Encourage profile completion / document submission to improve confidence.');
     const trend=(m.trend||[]); if(trend.length>=2){
       const a=trend.at(-2), b=trend.at(-1);
-      if ((b.avg_prob||0) < (a.avg_prob||0)) items.push('Likelihood dipped day‑over‑day. Review campaigns and counselor SLAs for the last 48h.');
-      if ((b.count||0) > (a.count||0)*1.25) items.push('Application surge detected. Assess counselor capacity and auto‑routing rules.');
+      if ((b.avg_prob||0) < (a.avg_prob||0)) items.push('Likelihood dipped day-over-day. Review campaigns and counselor SLAs for the last 48h.');
+      if ((b.count||0) > (a.count||0)*1.25) items.push('Application surge detected. Assess counselor capacity and auto-routing rules.');
     }
     insightsList.innerHTML = items.length
       ? items.map(t=>`<li>${t}</li>`).join('')
@@ -1188,15 +1257,8 @@ const Charts={
     latestRows.forEach(r=>{
       const b=bucketOf(r.prob||0).label;
       const row=[b,(r.priority||0).toFixed(4),(r.prob||0).toFixed(4),(r.conf||0).toFixed(4),
-        `"${
-          (r.first_program||'').replace(/"/g,'""')
-        }"`,`"${
-          (r.student_type||'').replace(/"/g,'""')
-        }"`,`"${
-          (r.curr_region||'').replace(/"/g,'""')
-        }"`,`"${
-          fmtDate(r.created_at)
-        }"`];
+        `"${(r.first_program||'').replace(/"/g,'""')}"` ,`"${(r.student_type||'').replace(/"/g,'""')}"`,
+        `"${(r.curr_region||'').replace(/"/g,'""')}"`,`"${fmtDate(r.created_at)}"`];
       lines.push(row.join(','));
     });
     const blob=new Blob([lines.join('\n')],{type:'text/csv;charset=utf-8;'});
@@ -1215,14 +1277,12 @@ const Charts={
   savePreset.addEventListener('click', ()=>{
     const name=prompt('Name this view (e.g., “CS High Confidence 7d”)'); if(!name) return;
     const saved=JSON.parse(localStorage.getItem('nu_presets')||'{}'); saved[name]=readPresetForm();
-    localStorage.setItem('nu_presets', JSON.stringify(saved)); loadPresets(); presetsSel.value=name; toast('View saved');
-    syncURL();
+    localStorage.setItem('nu_presets', JSON.stringify(saved)); loadPresets(); presetsSel.value=name; toast('View saved'); syncURL();
   });
   deletePreset.addEventListener('click', ()=>{
     const name=presetsSel.value; if(!name){ alert('Select a saved view first.'); return; }
     const saved=JSON.parse(localStorage.getItem('nu_presets')||'{}'); delete saved[name];
-    localStorage.setItem('nu_presets', JSON.stringify(saved)); loadPresets(); presetsSel.value=''; toast('View deleted');
-    syncURL();
+    localStorage.setItem('nu_presets', JSON.stringify(saved)); loadPresets(); presetsSel.value=''; toast('View deleted'); syncURL();
   });
   presetsSel.addEventListener('change', ()=>{
     const name=presetsSel.value; if(!name) return;
@@ -1232,10 +1292,7 @@ const Charts={
   loadPresets();
 
   // Shareable link
-  shareView.addEventListener('click', ()=>{
-    syncURL();
-    navigator.clipboard.writeText(location.href).then(()=> toast('Shareable link copied')).catch(()=> toast('Copy failed'));
-  });
+  shareView.addEventListener('click', ()=>{ syncURL(); navigator.clipboard.writeText(location.href).then(()=> toast('Shareable link copied')).catch(()=> toast('Copy failed')); });
 
   // Events
   document.querySelectorAll('[data-dl]').forEach(btn=> btn.addEventListener('click', ()=> downloadCanvas(btn.getAttribute('data-dl'), 'chart.png')) );
@@ -1252,7 +1309,7 @@ const Charts={
   window.addEventListener('beforeunload', ()=>{ if(timer) clearInterval(timer); });
 
   // Auto-refresh
-  autoRefresh.addEventListener('change', ()=>{ if (timer) { clearInterval(timer); timer=null; } if (autoRefresh.checked){ timer = setInterval(loadAll, 60000); toast('Auto‑refresh on'); } });
+  autoRefresh.addEventListener('change', ()=>{ if (timer) { clearInterval(timer); timer=null; } if (autoRefresh.checked){ timer = setInterval(loadAll, 60000); toast('Auto-refresh on'); } });
 
   // Help modal
   const help=byId('help'), helpBtn=byId('helpBtn'), helpClose=byId('helpClose');
@@ -1272,23 +1329,19 @@ const Charts={
     if(e.key==='S' && e.shiftKey){ e.preventDefault(); shareView.click(); }
   });
 
-  // Redraw charts on resize (no re-fetch)
+  // Replot on resize or tab switch — single observer (prevents “growing”)
   let rT=null;
-  const replot=()=>{ clearTimeout(rT); rT=setTimeout(()=>{ if (!lastMetrics) return; drawCharts(lastMetrics); }, 120); };
-  new ResizeObserver(replot).observe(document.body);
+  window.__NU_REPLOT = ()=>{ clearTimeout(rT); rT=setTimeout(()=>{ if (!lastMetrics) return; drawCharts(lastMetrics); }, 80); };
+  new ResizeObserver(()=> window.__NU_REPLOT()).observe(document.body);
 
   // Init
   hydrateFromURL();
   filterMinConfVal.textContent = Number(filterMinConf.value).toFixed(2);
-  document.querySelectorAll('[data-dl]').forEach(btn=> btn.addEventListener('click', ()=> downloadCanvas(btn.getAttribute('data-dl'), 'chart.png')) );
   loadAll();
 })();
 
 /***********************
- * FRONTEND-ONLY ENHANCERS (No backend changes)
- * - High-Contrast toggle
- * - Persistent Dense toggle
- * - Command Palette (⌘/Ctrl+K)
+ * ENHANCERS (No backend changes)
  ***********************/
 (function(){
   // High-contrast toggle (persist)
@@ -1344,9 +1397,7 @@ const Charts={
   function openPal(){
     pal.classList.add('open');
     last=document.activeElement;
-    input.value=''; filter('');
-    input.focus();
-    trap(pal);
+    input.value=''; filter(''); input.focus(); trap(pal);
   }
   function closePal(){ pal.classList.remove('open'); last&&last.focus(); }
   function filter(q){
